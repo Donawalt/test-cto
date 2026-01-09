@@ -1,0 +1,51 @@
+{
+  "name": "@myapp/db",
+  "version": "1.0.0",
+  "description": "Drizzle ORM with multi-database support",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build && tsc --emitDeclarationOnly",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@myapp/types": "workspace:*",
+    "drizzle-orm": "^0.29.3"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.8",
+    "@types/node": "^20.11.5",
+    "better-sqlite3": "^9.3.0",
+    "drizzle-kit": "^0.20.10",
+    "mysql2": "^3.7.1",
+    "postgres": "^3.4.3",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11"
+  },
+  "peerDependencies": {
+    "better-sqlite3": "^9.3.0",
+    "mysql2": "^3.7.1",
+    "postgres": "^3.4.3"
+  },
+  "peerDependenciesMeta": {
+    "better-sqlite3": {
+      "optional": true
+    },
+    "mysql2": {
+      "optional": true
+    },
+    "postgres": {
+      "optional": true
+    }
+  }
+}
