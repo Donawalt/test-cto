@@ -1,0 +1,43 @@
+{
+  "name": "@myapp/types",
+  "version": "1.0.0",
+  "description": "Type definitions, API contracts, and Zod schemas",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./db": {
+      "types": "./dist/db/index.d.ts",
+      "import": "./dist/db/index.js",
+      "require": "./dist/db/index.cjs"
+    },
+    "./api": {
+      "types": "./dist/api/index.d.ts",
+      "import": "./dist/api/index.js",
+      "require": "./dist/api/index.cjs"
+    },
+    "./ui": {
+      "types": "./dist/ui/index.d.ts",
+      "import": "./dist/ui/index.js",
+      "require": "./dist/ui/index.cjs"
+    }
+  },
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build && tsc --emitDeclarationOnly",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11"
+  }
+}

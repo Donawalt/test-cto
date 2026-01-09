@@ -1,0 +1,61 @@
+{
+  "name": "@myapp/server-utils",
+  "version": "1.0.0",
+  "description": "Server-only utilities for auth, crypto, validation, logging, error handling, and database helpers",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./auth": {
+      "types": "./dist/auth/index.d.ts",
+      "import": "./dist/auth/index.js",
+      "require": "./dist/auth/index.cjs"
+    },
+    "./crypto": {
+      "types": "./dist/crypto/index.d.ts",
+      "import": "./dist/crypto/index.js",
+      "require": "./dist/crypto/index.cjs"
+    },
+    "./error": {
+      "types": "./dist/error/index.d.ts",
+      "import": "./dist/error/index.js",
+      "require": "./dist/error/index.cjs"
+    },
+    "./validation": {
+      "types": "./dist/validation/index.d.ts",
+      "import": "./dist/validation/index.js",
+      "require": "./dist/validation/index.cjs"
+    },
+    "./logging": {
+      "types": "./dist/logging/index.d.ts",
+      "import": "./dist/logging/index.js",
+      "require": "./dist/logging/index.cjs"
+    },
+    "./db": {
+      "types": "./dist/db/index.d.ts",
+      "import": "./dist/db/index.js",
+      "require": "./dist/db/index.cjs"
+    }
+  },
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build && tsc --emitDeclarationOnly",
+    "type-check": "tsc --noEmit",
+    "test": "vitest",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@myapp/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11",
+    "vitest": "^1.2.0"
+  }
+}
