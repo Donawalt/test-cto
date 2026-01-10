@@ -19,11 +19,15 @@
     "dev": "vite build --watch",
     "build": "vite build && tsc --emitDeclarationOnly && chmod +x dist/cli.js",
     "type-check": "tsc --noEmit",
-    "generate": "node dist/cli.js generate",
+    "generate": "tsx src/cli.ts generate",
+    "generate:watch": "tsx src/cli.ts generate --watch",
+    "migrate:create": "tsx src/cli.ts migrate:create --name",
+    "migrate:run": "tsx src/cli.ts migrate:run",
     "clean": "rm -rf dist"
   },
   "dependencies": {
     "@myapp/types": "workspace:*",
+    "chokidar": "^3.5.3",
     "zod": "^3.22.4"
   },
   "devDependencies": {
