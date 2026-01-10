@@ -1,0 +1,27 @@
+astro
+================================================================================
+Type:        Frontend Template
+Framework:   Astro 4.x + React
+Purpose:     Static Site Generator / Hybrid
+Setup Time:  ~2 minutes
+
+Features:
+- Astro 4.x with React integration
+- Static Site Generation (SSG) by default
+- Optional Server-Side Rendering (SSR)
+- Tailwind CSS styling
+- File-based routing
+- Component islands architecture
+- TypeScript support
+
+Usage:
+  cp -r templates/astro my-site
+  cd my-site
+  pnpm install
+  pnpm dev
+
+For full documentation, see:
+  - QUICK_START.md
+  - INTEGRATION_CHECKLIST.md
+  - SECURITY.md
+  - templates/astro/README.md

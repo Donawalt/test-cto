@@ -1,6 +1,6 @@
 # MyApp Universal Monorepo Template
 
-A **complete, production-ready monorepo** with automatic type generation, comprehensive tooling, and 5 ready-to-use templates.
+A **complete, production-ready monorepo** with automatic type generation, comprehensive tooling, and 6 ready-to-use templates.
 
 ## 📑 Table of Contents
 
@@ -24,18 +24,22 @@ A **complete, production-ready monorepo** with automatic type generation, compre
 - 🗄️ [Define Schemas](./GETTING_STARTED.md#defining-database-schemas) - Create database schemas
 - 🔌 [Integrate APIs](./COMMUNICATION.md#client-side-patterns) - Connect client and server
 - 🚀 [Deploy to Production](./DEPLOYMENT.md#pre-deployment-checklist) - Ship your application
+- 🔒 [Security Guidelines](./SECURITY.md) - Security best practices
+- 📖 [Transparency Practices](./TRANSPARENCY.md) - Transparency and compliance
 
 **Learn the System:**
 - 📐 [Architecture Overview](./ARCHITECTURE.md#package-responsibilities) - Understand the package structure
 - 🔄 [Communication Patterns](./COMMUNICATION.md#api-contract-structure) - Master type-safe APIs
 - 📦 [Package Documentation](./ARCHITECTURE.md#package-responsibilities) - Deep dive into each package
+- 🗺️ [Documentation Map](./DOCUMENTATION_MAP.md) - Navigate all documentation
 
 **Choose a Template:**
 - ⚛️ [React App](./templates/vite-react/README.md) - Modern SPA with Vite
 - 🌟 [Astro Site](./templates/astro/README.md) - Static site generator
 - 🔧 [API Server](./templates/api-server/README.md) - Backend API
-- 🎯 [Full-Stack](./templates/bedrock-sage/README.md) - Complete application
+- 🎯 [Full-Stack](./templates/bedrock-sage/README.md) - Complete WordPress application
 - 📚 [NPM Library](./templates/library/README.md) - Package template
+- 🎬 [Sanity CMS](./templates/sanity-cms/README.md) - Headless CMS with Sanity Studio
 
 ## 🚀 Quick Start
 
@@ -146,6 +150,10 @@ packages/
 
 ### 1. **vite-react** - Modern React App
 ```bash
+# Using helper script (recommended)
+pnpm create-from-template vite-react ../my-react-app
+
+# Or manually copy
 cp templates/vite-react my-react-app
 cd my-react-app
 pnpm dev
@@ -156,7 +164,7 @@ pnpm dev
 
 ### 2. **astro** - Static Site Generator
 ```bash
-cp templates/astro my-site
+pnpm create-from-template astro ../my-site
 cd my-site
 pnpm dev
 ```
@@ -166,18 +174,18 @@ pnpm dev
 
 ### 3. **library** - NPM Package
 ```bash
-cp templates/library my-lib
+pnpm create-from-template library ../my-lib
 cd my-lib
 pnpm build
 pnpm publish
 ```
 - Full-featured NPM package template
-- TypeScript + Rollup + Tsup
+- TypeScript + Tsup for building
 - Testing + documentation setup
 
 ### 4. **api-server** - Backend API
 ```bash
-cp templates/api-server my-api
+pnpm create-from-template api-server ../my-api
 cd my-api
 pnpm dev
 ```
@@ -187,14 +195,27 @@ pnpm dev
 
 ### 5. **bedrock-sage** - Full Stack ⭐
 ```bash
-cp templates/bedrock-sage my-app
+pnpm create-from-template bedrock-sage ../my-app
 cd my-app
+composer install
 pnpm dev
 ```
 - **Complete full-stack application**
 - Bedrock (backend) + Sage (frontend)
 - Database + API + UI + testing
 - Docker deployment ready
+
+### 6. **sanity-cms** - Headless CMS
+```bash
+pnpm create-from-template sanity-cms ../my-studio
+cd my-studio
+npx sanity init
+pnpm dev
+```
+- Sanity Studio v3 with React
+- Pre-built content schemas
+- Blog, portfolio, settings schemas
+- Type-safe frontend integration
 
 ## 📁 Documentation Structure
 
@@ -205,7 +226,10 @@ pnpm dev
 | **[GETTING_STARTED.md](./GETTING_STARTED.md)** | Setup, development workflow | [Installation](./GETTING_STARTED.md#installation) • [Components](./GETTING_STARTED.md#creating-components) • [Database](./GETTING_STARTED.md#defining-database-schemas) • [Testing](./GETTING_STARTED.md#testing) |
 | **[ARCHITECTURE.md](./ARCHITECTURE.md)** | System design, package structure | [Packages](./ARCHITECTURE.md#package-responsibilities) • [Dependencies](./ARCHITECTURE.md#dependency-graph) • [Build Pipeline](./ARCHITECTURE.md#build-pipeline) • [Performance](./ARCHITECTURE.md#performance-considerations) |
 | **[COMMUNICATION.md](./COMMUNICATION.md)** | Type-safe API patterns | [API Contracts](./COMMUNICATION.md#api-contract-structure) • [Client Patterns](./COMMUNICATION.md#client-side-patterns) • [Server Patterns](./COMMUNICATION.md#server-side-patterns) • [Authentication](./COMMUNICATION.md#authentication) |
-| **[DEPLOYMENT.md](./DEPLOYMENT.md)** | Production deployment | [Vercel](./DEPLOYMENT.md#vercel) • [Railway](./DEPLOYMENT.md#railway) • [AWS](./DEPLOYMENT.md#aws) • [Database Setup](./DEPLOYMENT.md#database-setup) • [CI/CD](./DEPLOYMENT.md#cicd-integration) • [Monitoring](./DEPLOYMENT.md#monitoring--logging) |
+| **[DEPLOYMENT.md](./DEPLOYMENT.md)** | Production deployment | [Cloudflare](./DEPLOYMENT.md#cloudflare-deployment) • [Infomaniak](./DEPLOYMENT.md#infomaniak-deployment) • [Scaleway](./DEPLOYMENT.md#scaleway-deployment) • [Multi-Provider Comparison](./DEPLOYMENT.md#multi-provider-comparison) |
+| **[SECURITY.md](./SECURITY.md)** | Security best practices | [Philosophy](./SECURITY.md#security-philosophy) • [Authentication](./SECURITY.md#authentication--authorization) • [API Security](./SECURITY.md#api-security) • [GDPR/CCPA](./SECURITY.md#data-protection--privacy-gdprccpa) |
+| **[TRANSPARENCY.md](./TRANSPARENCY.md)** | Transparency & compliance | [Code Transparency](./TRANSPARENCY.md#code-transparency) • [Data Transparency](./TRANSPARENCY.md#data-transparency) • [GDPR Compliance](./TRANSPARENCY.md#compliance) |
+| **[DOCUMENTATION_MAP.md](./DOCUMENTATION_MAP.md)** | Navigate all docs | [Link Graph](./DOCUMENTATION_MAP.md#documentation-link-graph) • [User Journeys](./DOCUMENTATION_MAP.md#user-journey-maps) • [Recommended Reading](./DOCUMENTATION_MAP.md#recommended-reading-order) |
 
 ### Package Documentation
 
@@ -235,10 +259,22 @@ pnpm dev
 - **[api-server](./templates/api-server/README.md)** - Backend API server with Express
 
 **Full-Stack Templates:**
-- **[bedrock-sage](./templates/bedrock-sage/README.md)** - Complete full-stack application
+- **[bedrock-sage](./templates/bedrock-sage/README.md)** - Complete full-stack application with Bedrock + Sage
 
 **Library Templates:**
 - **[library](./templates/library/README.md)** - NPM package template with full tooling
+
+**CMS Templates:**
+- **[sanity-cms](./templates/sanity-cms/README.md)** - Headless CMS with Sanity Studio
+  - [Quick Start](./templates/sanity-cms/QUICK_START.md)
+  - [Setup Guide](./templates/sanity-cms/SANITY_SETUP.md)
+  - [Integration with test-cto](./templates/sanity-cms/INTEGRATION_WITH_TESTCTO.md)
+  - [Security](./templates/sanity-cms/SECURITY.md)
+
+**Template Resources (All Templates):**
+- [QUICK_START.md](./templates/*/QUICK_START.md) - Get running in 2-5 minutes
+- [INTEGRATION_CHECKLIST.md](./templates/*/INTEGRATION_CHECKLIST.md) - Standalone + monorepo paths
+- [SECURITY.md](./templates/*/SECURITY.md) - Template-specific security
 
 ## 🎯 Key Features
 
@@ -482,6 +518,17 @@ Get started with a specific template:
 - [library](./templates/library/README.md) - NPM package template with full tooling
 - [api-server](./templates/api-server/README.md) - Backend API server with Express
 - [bedrock-sage](./templates/bedrock-sage/README.md) - Full-stack application template
+- [sanity-cms](./templates/sanity-cms/README.md) - Headless CMS with Sanity Studio
+
+### Security & Transparency
+- **[SECURITY.md](./SECURITY.md)** - Comprehensive security practices and checklists
+- **[TRANSPARENCY.md](./TRANSPARENCY.md)** - Transparency in code, data, and operations
+- **[DOCUMENTATION_MAP.md](./DOCUMENTATION_MAP.md)** - Navigate all documentation
+
+### Using Templates
+- **Helper Script**: `pnpm create-from-template <template-name> <destination>`
+- **Example**: `pnpm create-from-template vite-react ../my-app`
+- **Manual**: `cp -r templates/vite-react my-app`
 
 ---
 

@@ -1,0 +1,49 @@
+{
+  "name": "sanity-cms",
+  "description": "Headless CMS with Sanity Studio, pre-built schemas for blogs, portfolios, and content management",
+  "type": "cms",
+  "framework": "sanity",
+  "setupTime": "5 minutes",
+  "monorepoReady": true,
+  "standaloneReady": true,
+  "features": [
+    "Sanity Studio v3",
+    "Pre-built content schemas",
+    "Blog schema (posts, authors, categories)",
+    "Portfolio schema (projects, skills)",
+    "Site settings schema",
+    "Block content (portable text)",
+    "Desk structure customization",
+    "Media library configuration",
+    "Role-based access control"
+  ],
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "deploy-graphql": "sanity graphql deploy",
+    "start": "sanity start",
+    "clean": "sanity clean"
+  },
+  "dependencies": {
+    "@sanity/vision": "^3.30.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "sanity": "^3.30.0",
+    "styled-components": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/styled-components": "^5.1.0",
+    "typescript": "^5.3.0"
+  },
+  "keywords": [
+    "sanity",
+    "cms",
+    "headless",
+    "studio",
+    "content-management"
+  ],
+  "author": "test-cto",
+  "version": "1.0.0"
+}

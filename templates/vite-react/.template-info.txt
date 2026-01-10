@@ -1,0 +1,27 @@
+vite-react
+================================================================================
+Type:        Frontend Template
+Framework:   React 18 + Vite
+Purpose:     Modern Single Page Application (SPA)
+Setup Time:  ~2 minutes
+
+Features:
+- React 18 with Vite for fast development
+- TanStack Router for type-safe routing
+- Tailwind CSS for styling
+- Lenis smooth scrolling
+- TanStack Query for data fetching
+- Vitest for testing
+- TypeScript strict mode
+
+Usage:
+  cp -r templates/vite-react my-app
+  cd my-app
+  pnpm install
+  pnpm dev
+
+For full documentation, see:
+  - QUICK_START.md
+  - INTEGRATION_CHECKLIST.md
+  - SECURITY.md
+  - templates/vite-react/README.md

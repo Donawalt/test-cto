@@ -1,0 +1,31 @@
+bedrock-sage
+================================================================================
+Type:        Full-Stack Template
+Framework:   WordPress (Bedrock) + Sage Theme
+Purpose:     Modern WordPress Development
+Setup Time:  ~5 minutes
+
+Features:
+- Bedrock: Modern WordPress with Composer
+- Sage: WordPress theme with modern tooling
+- Environment-based configuration
+- WP-CLI integration ready
+- Docker development environment
+- ACF integration ready
+- REST API integration
+- Deployment-ready
+
+Usage:
+  cp -r templates/bedrock-sage my-wordpress-app
+  cd my-wordpress-app
+  composer install
+  npm install
+
+For full documentation, see:
+  - BEDROCK_SETUP.md (comprehensive setup guide)
+  - QUICK_START.md
+  - INTEGRATION_CHECKLIST.md
+  - SECURITY.md
+  - templates/bedrock-sage/README.md
+
+Note: Requires PHP 8.0+, Composer, Node 18+

@@ -1,0 +1,42 @@
+{
+  "name": "library",
+  "description": "Production-ready NPM package template with TypeScript, Tsup, and comprehensive tooling",
+  "type": "library",
+  "framework": "typescript",
+  "setupTime": "2 minutes",
+  "monorepoReady": true,
+  "standaloneReady": true,
+  "features": [
+    "TypeScript strict mode",
+    "Tsup for building",
+    "Dual ESM/CJS exports",
+    "Automatic type declarations",
+    "Vitest testing",
+    "ESLint + Prettier",
+    "NPM publishing ready",
+    "Change log generation"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest",
+    "lint": "eslint src --ext .ts",
+    "type-check": "tsc --noEmit",
+    "prepack": "pnpm build"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "tsup": "^8.0.0",
+    "vitest": "^1.0.0",
+    "eslint": "^8.56.0"
+  },
+  "keywords": [
+    "typescript",
+    "library",
+    "npm",
+    "package",
+    "tsup"
+  ],
+  "author": "test-cto",
+  "version": "1.0.0"
+}
