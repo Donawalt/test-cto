@@ -2,6 +2,23 @@
 
 This document describes the architecture of the MyApp monorepo, including package responsibilities, boundaries, and communication patterns.
 
+> **See Also**: [COMMUNICATION.md](./COMMUNICATION.md) for API patterns, [GETTING_STARTED.md](./GETTING_STARTED.md) for development setup, [DEPLOYMENT.md](./DEPLOYMENT.md) for production deployment.
+
+## 📑 Table of Contents
+
+- [Package Responsibilities](#package-responsibilities)
+  - [Client-Side Packages](#client-side-packages)
+  - [Server-Side Packages](#server-side-packages)
+  - [Shared Packages](#shared-packages)
+- [Client vs Server Boundary](#client-vs-server-boundary)
+- [Communication Flow](#communication-flow)
+- [Dependency Graph](#dependency-graph)
+- [Build Pipeline](#build-pipeline)
+- [Type Safety Guarantees](#type-safety-guarantees)
+- [Performance Considerations](#performance-considerations)
+- [Development Workflow](#development-workflow)
+- [Testing Strategy](#testing-strategy)
+
 ## Package Responsibilities
 
 ### Client-Side Packages
@@ -18,6 +35,8 @@ The main React application that serves as the entry point for end users.
 
 **Dependencies:** All other packages except server-side ones
 
+**Documentation:** [@myapp/web README](./packages/web/README.md)
+
 #### @myapp/ui
 A component library with Tailwind styling and Lenis-aware patterns.
 
@@ -28,6 +47,8 @@ A component library with Tailwind styling and Lenis-aware patterns.
 - Design system implementation
 
 **Dependencies:** @myapp/types, @myapp/tokens, @myapp/hooks
+
+**Documentation:** [@myapp/ui README](./packages/ui/README.md)
 
 #### @myapp/hooks
 Custom React hooks for common patterns and functionality.
@@ -40,6 +61,8 @@ Custom React hooks for common patterns and functionality.
 
 **Dependencies:** @studio-freight/lenis
 
+**Documentation:** [@myapp/hooks README](./packages/hooks/README.md)
+
 #### @myapp/lib
 Universal utilities that work in both browser and Node.js environments.
 
@@ -50,6 +73,8 @@ Universal utilities that work in both browser and Node.js environments.
 - Math utilities (clamp, randomInt)
 
 **Dependencies:** None
+
+**Documentation:** [@myapp/lib README](./packages/lib/README.md)
 
 #### @myapp/utils
 Client-only utilities for browser-specific operations.
@@ -62,6 +87,8 @@ Client-only utilities for browser-specific operations.
 - Client-side validation (email, phone, URL, password)
 
 **Dependencies:** None
+
+**Documentation:** [@myapp/utils README](./packages/utils/README.md)
 
 ### Server-Side Packages
 
@@ -76,6 +103,8 @@ Drizzle ORM integration with multi-database support.
 
 **Dependencies:** @myapp/types, drizzle-orm, database drivers (optional peers)
 
+**Documentation:** [@myapp/db README](./packages/db/README.md)
+
 #### @myapp/schema
 JSON schema builder and code generation CLI tool.
 
@@ -86,6 +115,8 @@ JSON schema builder and code generation CLI tool.
 - CLI for build-time code generation
 
 **Dependencies:** @myapp/types, zod
+
+**Documentation:** [@myapp/schema README](./packages/schema/README.md)
 
 #### @myapp/server-utils
 Server-only utilities for backend operations.
@@ -99,6 +130,8 @@ Server-only utilities for backend operations.
 - Database helpers (pagination, query builders, search)
 
 **Dependencies:** @myapp/types
+
+**Documentation:** [@myapp/server-utils README](./packages/server-utils/README.md)
 
 ### Shared Packages
 
@@ -114,6 +147,10 @@ Type definitions, API contracts, and Zod schemas shared between client and serve
 
 **Dependencies:** zod
 
+**Documentation:** [@myapp/types README](./packages/types/README.md)
+
+**See Also:** [COMMUNICATION.md](./COMMUNICATION.md) for API contract patterns
+
 #### @myapp/tokens
 Design tokens and Tailwind configuration.
 
@@ -127,6 +164,8 @@ Design tokens and Tailwind configuration.
 - Tailwind config generation
 
 **Dependencies:** None
+
+**Documentation:** [@myapp/tokens README](./packages/tokens/README.md)
 
 ## Client vs Server Boundary
 
@@ -162,6 +201,8 @@ import { createDatabase } from '@myapp/db';
    - Both validate: API.Validators schemas
 
 ## Communication Flow
+
+> **See Also**: [COMMUNICATION.md](./COMMUNICATION.md) for comprehensive API patterns and examples.
 
 ### Type-Safe API Communication
 
@@ -327,3 +368,30 @@ return { success: true, data: user } satisfies API.Responses.UserResponse;
 4. **Type Tests** - TypeScript compilation
 
 All tests run via Vitest with appropriate environments (jsdom for client, node for server).
+
+---
+
+## 📚 Related Documentation
+
+- **[README.md](./README.md)** - Project overview and quick start
+- **[GETTING_STARTED.md](./GETTING_STARTED.md)** - Development setup and workflow
+- **[COMMUNICATION.md](./COMMUNICATION.md)** - API patterns and client-server contracts
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Production deployment strategies
+
+### Package Documentation
+- [@myapp/types](./packages/types/README.md) - Type definitions and API contracts
+- [@myapp/db](./packages/db/README.md) - Database utilities and ORM
+- [@myapp/schema](./packages/schema/README.md) - Schema builder and code generation
+- [@myapp/server-utils](./packages/server-utils/README.md) - Server-side utilities
+- [@myapp/ui](./packages/ui/README.md) - UI component library
+- [@myapp/hooks](./packages/hooks/README.md) - React hooks
+- [@myapp/utils](./packages/utils/README.md) - Client-side utilities
+- [@myapp/lib](./packages/lib/README.md) - Universal utilities
+- [@myapp/tokens](./packages/tokens/README.md) - Design tokens
+
+### Template Documentation
+- [vite-react](./templates/vite-react/README.md) - React app template
+- [astro](./templates/astro/README.md) - Static site template
+- [api-server](./templates/api-server/README.md) - API server template
+- [bedrock-sage](./templates/bedrock-sage/README.md) - Full-stack template
+- [library](./templates/library/README.md) - NPM package template

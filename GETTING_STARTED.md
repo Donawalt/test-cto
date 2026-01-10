@@ -2,6 +2,23 @@
 
 This guide will help you set up the MyApp monorepo and start developing.
 
+> **See Also**: [ARCHITECTURE.md](./ARCHITECTURE.md) for system design details, [COMMUNICATION.md](./COMMUNICATION.md) for API patterns, [DEPLOYMENT.md](./DEPLOYMENT.md) for production deployment.
+
+## 📑 Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Development](#development)
+- [Creating Components](#creating-components)
+- [Defining Database Schemas](#defining-database-schemas)
+- [Type Generation](#type-generation)
+- [API Integration](#api-integration)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Environment Variables](#environment-variables)
+- [Troubleshooting](#troubleshooting)
+- [Next Steps](#next-steps)
+
 ## Prerequisites
 
 - Node.js >= 18.0.0
@@ -124,6 +141,8 @@ function Page() {
 
 ## Defining Database Schemas
 
+> **See Also**: [@myapp/db README](./packages/db/README.md) for database utilities, [@myapp/schema README](./packages/schema/README.md) for schema builder details.
+
 ### 1. Update Schema Definition
 
 ```typescript
@@ -153,6 +172,8 @@ pnpm drizzle-kit push:pg
 ```
 
 ## Type Generation
+
+> **See Also**: [@myapp/types README](./packages/types/README.md) for type definitions and API contracts.
 
 ### 1. Define Types
 
@@ -241,6 +262,8 @@ async function handleCreateProduct(req: Request) {
 
 ## API Integration
 
+> **See Also**: [COMMUNICATION.md](./COMMUNICATION.md) for comprehensive API patterns, [@myapp/server-utils README](./packages/server-utils/README.md) for validation and error handling utilities.
+
 ### 1. Define Endpoint
 
 ```typescript
@@ -328,6 +351,8 @@ describe('formatCurrency', () => {
 
 ## Deployment
 
+> **See Also**: [DEPLOYMENT.md](./DEPLOYMENT.md) for comprehensive deployment guides for all platforms (Vercel, Netlify, Railway, Render, AWS, etc).
+
 ### Build for Production
 
 ```bash
@@ -341,16 +366,18 @@ pnpm build:web
 ### Deploy Web App
 
 The built web app is in `packages/web/dist` and can be deployed to:
-- Vercel
-- Netlify
-- AWS S3 + CloudFront
+- [Vercel](./DEPLOYMENT.md#vercel)
+- [Netlify](./DEPLOYMENT.md#netlify)
+- [AWS S3 + CloudFront](./DEPLOYMENT.md#aws)
 - Any static hosting service
 
 ### Deploy Server
 
 1. Build server packages
 2. Set environment variables
-3. Deploy to your hosting platform (Railway, Render, AWS, etc)
+3. Deploy to your hosting platform ([Railway](./DEPLOYMENT.md#railway), [Render](./DEPLOYMENT.md#render), [AWS](./DEPLOYMENT.md#aws), etc)
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed platform-specific guides.
 
 ## Environment Variables
 
@@ -410,6 +437,7 @@ pnpm build
 
 - Read [ARCHITECTURE.md](./ARCHITECTURE.md) to understand the system design
 - Read [COMMUNICATION.md](./COMMUNICATION.md) for API patterns
+- Read [DEPLOYMENT.md](./DEPLOYMENT.md) for production deployment strategies
 - Explore package-specific READMEs for detailed documentation
 - Check out example components and routes in @myapp/web
 
@@ -418,3 +446,28 @@ pnpm build
 - Check package-specific READMEs
 - Review example code in `packages/web/src/routes`
 - Read TypeScript types and JSDoc comments
+
+---
+
+## 📚 Related Documentation
+
+- **[README.md](./README.md)** - Project overview and quick start
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - System design and package structure
+- **[COMMUNICATION.md](./COMMUNICATION.md)** - API patterns and client-server contracts
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Production deployment strategies
+
+### Package READMEs
+- [@myapp/types](./packages/types/README.md) - Type definitions
+- [@myapp/db](./packages/db/README.md) - Database utilities
+- [@myapp/schema](./packages/schema/README.md) - Schema builder
+- [@myapp/server-utils](./packages/server-utils/README.md) - Server utilities
+- [@myapp/ui](./packages/ui/README.md) - UI components
+- [@myapp/hooks](./packages/hooks/README.md) - React hooks
+- [@myapp/utils](./packages/utils/README.md) - Client utilities
+
+### Template READMEs
+- [vite-react](./templates/vite-react/README.md) - React app template
+- [astro](./templates/astro/README.md) - Static site template
+- [api-server](./templates/api-server/README.md) - API server template
+- [bedrock-sage](./templates/bedrock-sage/README.md) - Full-stack template
+- [library](./templates/library/README.md) - NPM package template
