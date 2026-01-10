@@ -7,12 +7,19 @@ A comprehensive guide for deploying MyApp monorepo applications to production ac
 - [Overview](#overview)
 - [Pre-Deployment Checklist](#pre-deployment-checklist)
 - [Platform-Specific Guides](#platform-specific-guides)
-  - [Vercel](#vercel)
-  - [Netlify](#netlify)
-  - [Railway](#railway)
-  - [Render](#render)
-  - [AWS](#aws)
-  - [DigitalOcean](#digitalocean)
+  - [Frontend Platforms](#frontend-platforms)
+    - [Vercel](#vercel)
+    - [Netlify](#netlify)
+    - [Cloudflare Pages](#cloudflare-pages)
+  - [Backend Platforms](#backend-platforms)
+    - [Railway](#railway)
+    - [Render](#render)
+    - [Cloudflare Workers](#cloudflare-workers)
+    - [Infomaniak](#infomaniak)
+    - [Scaleway](#scaleway)
+  - [Full-Stack Platforms](#full-stack-platforms)
+    - [AWS](#aws)
+    - [DigitalOcean](#digitalocean)
 - [Database Setup](#database-setup)
 - [Environment Configuration](#environment-configuration)
 - [CI/CD Integration](#cicd-integration)
@@ -24,13 +31,35 @@ A comprehensive guide for deploying MyApp monorepo applications to production ac
 
 ## Overview
 
-The MyApp monorepo supports multiple deployment strategies depending on your template choice:
+The MyApp monorepo supports multiple deployment strategies across **9 production-ready platforms** depending on your template choice:
 
-- **vite-react**: Static site or SPA hosting (Vercel, Netlify, AWS S3)
-- **astro**: Static site generation with optional SSR
-- **api-server**: Backend API deployment (Railway, Render, AWS ECS)
-- **bedrock-sage**: Full-stack deployment (Railway, Render, AWS)
-- **library**: NPM package publishing
+### Template Compatibility Matrix
+
+| Platform | vite-react | astro | api-server | bedrock-sage | library |
+|----------|-----------|-------|-----------|--------------|---------|
+| **Vercel** | ✅ | ✅ | - | - | - |
+| **Netlify** | ✅ | ✅ | - | - | - |
+| **Cloudflare** | ✅ | ✅ | ✅ (Workers) | - | - |
+| **Railway** | - | - | ✅ | ✅ | - |
+| **Render** | - | - | ✅ | ✅ | - |
+| **Infomaniak** | - | - | ✅ | ✅ | - |
+| **Scaleway** | - | - | ✅ | ✅ | - |
+| **AWS** | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **DigitalOcean** | ✅ | ✅ | ✅ | ✅ | - |
+
+### Deployment Categories
+
+- **Frontend Platforms**: Vercel, Netlify, Cloudflare Pages (static site hosting)
+- **Backend Platforms**: Railway, Render, Cloudflare Workers, Infomaniak, Scaleway (API/server deployment)
+- **Full-Stack Platforms**: AWS, DigitalOcean (complete infrastructure control)
+
+### Platform Highlights
+
+- **Privacy-Focused**: Infomaniak (Swiss data residency, GDPR compliance)
+- **Edge Computing**: Cloudflare Workers (global edge deployment)
+- **Enterprise-Ready**: AWS, Scaleway (full infrastructure control)
+- **Developer-Friendly**: Vercel, Netlify, Railway, Render (simple deployment)
+- **Cost-Effective**: DigitalOcean, Infomaniak, Scaleway (competitive pricing)
 
 > **See Also**: [ARCHITECTURE.md](./ARCHITECTURE.md) for system design details, [GETTING_STARTED.md](./GETTING_STARTED.md) for local development setup.
 
@@ -430,6 +459,895 @@ pm2 startup
 pm2 save
 ```
 
+### Cloudflare Pages
+
+Best for: `vite-react` template, `astro` template
+
+**Privacy & Performance**: Global CDN, edge caching, excellent performance
+
+**Setup:**
+
+1. Install Wrangler CLI:
+```bash
+npm install -g wrangler
+```
+
+2. Deploy static site:
+```bash
+cd templates/vite-react
+pnpm build
+npx wrangler pages deploy dist
+```
+
+3. Configure `wrangler.toml`:
+```toml
+name = "myapp"
+compatibility_date = "2023-10-30"
+
+[env.production]
+workers_dev = false
+
+[env.production.vars]
+NODE_ENV = "production"
+```
+
+**Environment Variables:**
+```bash
+# Set via Wrangler CLI
+npx wrangler pages secret put VITE_API_URL --env=production
+npx wrangler pages secret put VITE_PUBLIC_KEY --env=production
+
+# Or use dashboard: Workers & Pages → Settings → Environment Variables
+```
+
+**Custom Domain:**
+```bash
+npx wrangler pages domain add yourdomain.com --env=production
+```
+
+**CDN & Caching Strategy:**
+```javascript
+// Cache static assets for 1 year
+// Cache HTML for 1 hour
+// Cloudflare handles this automatically
+```
+
+**See Also**: [vite-react README](./templates/vite-react/README.md)
+
+### Cloudflare Workers
+
+Best for: `api-server` template, edge functions, global distribution
+
+**Privacy & Performance**: Edge computing, 275+ locations worldwide, excellent for low-latency APIs
+
+**Setup:**
+
+1. Create Worker:
+```bash
+npx wrangler init myapp-worker
+cd myapp-worker
+```
+
+2. Configure `wrangler.toml`:
+```toml
+name = "myapp-api"
+main = "src/index.ts"
+compatibility_date = "2023-10-30"
+
+# Database bindings
+[[d1_databases]]
+binding = "DB"
+database_name = "myapp-db"
+database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+# KV store for sessions
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "xxxxxxxxxxxxxxxxxxxx"
+
+# Environment variables
+[env.production.vars]
+NODE_ENV = "production"
+JWT_SECRET = "your-secret-key"
+```
+
+3. Deploy Worker:
+```bash
+npx wrangler deploy --env=production
+```
+
+**Database Setup (D1):**
+```bash
+# Create D1 database
+npx wrangler d1 create myapp-db
+
+# Run migrations
+npx wrangler d1 execute myapp-db --file=./migrations/schema.sql --env=production
+```
+
+**KV Store for Sessions:**
+```bash
+# Create KV namespace
+npx wrangler kv:namespace create SESSIONS
+
+# Add to wrangler.toml binding
+```
+
+**CORS Configuration:**
+```typescript
+// src/index.ts
+export default {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    const corsHeaders = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE, PATCH',
+      'Access-Control-Max-Age': '86400',
+    };
+
+    if (request.method === 'OPTIONS') {
+      return new Response(null, { headers: corsHeaders });
+    }
+
+    // Your API logic here
+    return new Response(JSON.stringify({ message: 'Hello from Workers!' }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  },
+};
+```
+
+**Rate Limiting:**
+```typescript
+// Implement rate limiting using KV store
+const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+const rateLimitKey = `rate_limit:${ip}`;
+const requests = await env.SESSIONS.get(rateLimitKey);
+
+if (requests && parseInt(requests) > 100) {
+  return new Response('Rate limit exceeded', { status: 429 });
+}
+
+await env.SESSIONS.put(rateLimitKey, String((parseInt(requests) || 0) + 1), { expirationTtl: 3600 });
+```
+
+### Cloudflare R2 (Object Storage)
+
+Best for: Static assets, file uploads, media storage
+
+**Setup:**
+```bash
+# Create R2 bucket
+npx wrangler r2 bucket create myapp-assets
+
+# Configure binding in wrangler.toml
+[[r2_buckets]]
+binding = "ASSETS"
+bucket_name = "myapp-assets"
+```
+
+**File Upload Example:**
+```typescript
+export default {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    if (request.method === 'POST') {
+      const formData = await request.formData();
+      const file = formData.get('file') as File;
+      
+      const key = `uploads/${Date.now()}-${file.name}`;
+      await env.ASSETS.put(key, file.stream());
+      
+      return new Response(JSON.stringify({ key, url: `https://pub-xxx.r2.dev/${key}` }));
+    }
+    return new Response('Method not allowed', { status: 405 });
+  },
+};
+```
+
+**Signed URLs for Private Assets:**
+```typescript
+const url = await env.ASSETS.createSignedUrl('private-file.jpg', 3600);
+```
+
+### Cloudflare WAF (Web Application Firewall)
+
+**Setup via Dashboard:**
+1. Security → WAF → Custom rules
+2. Rate limiting rules (100 requests per 10 minutes per IP)
+3. Bot management (challenge suspicious traffic)
+4. DDoS protection (automatically enabled)
+
+**Custom Rules Example:**
+```javascript
+# Block common attack patterns
+(http.request.uri.path contains "sqlmap" or http.request.uri.path contains "wp-admin")
+
+# Rate limit API endpoints
+(http.request.uri.path contains "/api/" and cf.threat_score > 10)
+
+# Block specific regions (if needed)
+(ip.geoip.country in {"CN" "RU"})
+```
+
+### Cloudflare DDoS Protection
+
+**Automatic Protection:**
+- L3/L4 DDoS protection (free)
+- L7 DDoS protection (Pro/Enterprise)
+- Always-on monitoring
+- No configuration needed
+
+**Custom Rules:**
+```javascript
+# Rate limiting for API endpoints
+(http.request.uri.path contains "/api/" and rate(5m) > 1000)
+```
+
+---
+
+## Infomaniak
+
+Best for: `api-server` template, `bedrock-sage` template, privacy-focused projects
+
+**Privacy & Compliance**: Swiss data residency, GDPR compliance, encrypted backups, no third-party data sharing
+
+**Key Features:**
+- **Data Residency**: All data stored in Switzerland
+- **GDPR Compliance**: Built-in privacy controls
+- **Encrypted Backups**: Automatic and manual backup encryption
+- **Swiss Privacy**: No US surveillance laws (CLOUD Act)
+- **Cost-Effective**: Competitive European pricing
+
+### Setup
+
+#### 1. Create Account
+```bash
+# Register at infomaniak.com
+# Choose hosting plan (App Hosting or Virtual Server)
+```
+
+#### 2. Deploy API Server
+
+**Option A: Managed Hosting (Similar to Railway/Render)**
+
+1. Upload via Git:
+```bash
+# Connect GitHub repository
+# Auto-deploy on push to main branch
+```
+
+2. Configure build:
+```yaml
+# infomaniak.yml
+build:
+  commands:
+    - npm install -g pnpm
+    - pnpm install --frozen-lockfile
+    - pnpm build
+
+start:
+  command: "pnpm start"
+  port: 4000
+
+environments:
+  production:
+    - NODE_ENV=production
+    - DATABASE_URL
+    - JWT_SECRET
+```
+
+3. Environment Variables:
+```bash
+# Dashboard → Environment Variables
+NODE_ENV=production
+DATABASE_URL=postgresql://user:pass@host:5432/db
+JWT_SECRET=your-secret-key
+API_PORT=4000
+```
+
+**Option B: Virtual Server (VPS)**
+
+1. Create VPS:
+```bash
+# Choose Ubuntu 22.04 LTS
+# Recommended: 2 vCPU, 4GB RAM, 50GB SSD
+```
+
+2. Server Setup:
+```bash
+# SSH into server
+ssh root@your-server-ip
+
+# Update system
+apt update && apt upgrade -y
+
+# Install Node.js 18
+curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+apt install -y nodejs
+
+# Install pnpm
+npm install -g pnpm
+
+# Install PM2 for process management
+npm install -g pm2
+
+# Install PostgreSQL
+apt install -y postgresql postgresql-contrib
+```
+
+3. Deploy Application:
+```bash
+# Clone repository
+git clone <your-repo> /var/www/myapp
+cd /var/www/myapp
+
+# Install dependencies
+pnpm install --frozen-lockfile
+
+# Build application
+pnpm build
+
+# Start with PM2
+pm2 start pnpm --name myapp -- start
+pm2 startup
+pm2 save
+```
+
+### Database Setup (PostgreSQL)
+
+#### Managed Database:
+```bash
+# Create PostgreSQL database in Infomaniak dashboard
+# Get connection string: postgresql://user:password@host:5432/database
+
+# Add to environment variables
+DATABASE_URL=postgresql://user:password@host:5432/database
+```
+
+#### Manual PostgreSQL Setup:
+```bash
+# Connect to PostgreSQL
+sudo -u postgres psql
+
+# Create database and user
+CREATE DATABASE myapp;
+CREATE USER myapp_user WITH ENCRYPTED PASSWORD 'secure_password';
+GRANT ALL PRIVILEGES ON DATABASE myapp TO myapp_user;
+
+# Configure for external connections
+# Edit /etc/postgresql/*/main/pg_hba.conf
+# Add: host myapp myapp_user your_app_ip/32 md5
+
+# Restart PostgreSQL
+systemctl restart postgresql
+```
+
+### SSL/TLS Setup
+
+**Let's Encrypt (Free SSL):**
+```bash
+# Install Certbot
+apt install -y certbot python3-certbot-nginx
+
+# Get certificate
+certbot --nginx -d yourdomain.com -d api.yourdomain.com
+
+# Auto-renewal
+crontab -e
+# Add: 0 12 * * * /usr/bin/certbot renew --quiet
+```
+
+**Infomaniak Managed SSL:**
+- SSL certificates included with hosting plans
+- Automatic renewal
+- Free Let's Encrypt certificates
+
+### Encrypted Backups
+
+#### Automatic Encrypted Backups:
+```bash
+# Enable in dashboard → Backups
+# Frequency: Daily/Weekly
+# Retention: 30 days
+# Encryption: AES-256 (automatic)
+```
+
+#### Manual Backup Script:
+```bash
+#!/bin/bash
+# /opt/myapp/backup.sh
+
+DB_NAME="myapp"
+BACKUP_DIR="/opt/backups"
+DATE=$(date +%Y%m%d_%H%M%S)
+
+# Create encrypted database dump
+pg_dump $DB_NAME | gzip | gpg --cipher-algo AES256 --compress-algo 1 --symmetric --output $BACKUP_DIR/db_backup_$DATE.sql.gz.gpg
+
+# Upload to Swiss storage
+# Configure your backup destination
+echo "Backup completed: db_backup_$DATE.sql.gz.gpg"
+```
+
+### Monitoring & Logging
+
+#### Application Monitoring:
+```bash
+# PM2 monitoring
+pm2 monit
+
+# Log management
+pm2 logs myapp
+
+# System monitoring
+apt install -y htop iotop
+```
+
+#### Health Checks:
+```typescript
+// Add to your API server
+app.get('/health', async (req, res) => {
+  try {
+    await db.execute(sql`SELECT 1`);
+    res.status(200).json({
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      memory: process.memoryUsage(),
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: 'error',
+      error: error.message,
+    });
+  }
+});
+```
+
+### Swiss Privacy Compliance
+
+#### Data Protection Features:
+- **Swiss Data Residency**: All data stays in Switzerland
+- **GDPR Compliance**: Built-in consent management
+- **No US Surveillance**: Protected from CLOUD Act
+- **Encrypted Backups**: AES-256 encryption at rest and in transit
+- **Privacy by Design**: Minimal data collection
+
+#### GDPR Compliance Setup:
+```typescript
+// Add privacy headers
+app.use((req, res, next) => {
+  res.set({
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'DENY',
+    'X-XSS-Protection': '1; mode=block',
+    'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+    'Content-Security-Policy': "default-src 'self'",
+    'X-Privacy-Policy': 'https://yourdomain.com/privacy',
+    'X-Data-Residency': 'Switzerland',
+  });
+  next();
+});
+```
+
+**See Also**: [api-server README](./templates/api-server/README.md), [Privacy-focused deployment guide](./SECURITY.md#data-protection--privacy-gdprccpa)
+
+---
+
+## Scaleway
+
+Best for: `api-server` template, `bedrock-sage` template, production-scale deployments
+
+**Enterprise Features**: Docker/Kubernetes, VPC networking, security groups, managed databases, auto-scaling
+
+**Key Features:**
+- **Container Registry**: Build and store Docker images
+- **Kubernetes K8s**: Managed K8s clusters with auto-scaling
+- **VPC Networking**: Private network isolation
+- **Security Groups**: Firewall rules and network access control
+- **Managed Databases**: PostgreSQL with automated backups
+- **Edge Computing**: Multi-region deployment
+
+### Container Registry & Docker Deployment
+
+#### 1. Create Container Registry
+```bash
+# Install Scaleway CLI
+curl -o /usr/local/bin/scw -L https://github.com/scaleway/scaleway-cli/releases/latest/download/scw-linux-amd64
+chmod +x /usr/local/bin/scw
+
+# Configure credentials
+scw init
+
+# Create registry
+scw registry namespace create name=myapp-registry
+```
+
+#### 2. Build and Push Docker Image
+```dockerfile
+# Dockerfile for api-server
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Install pnpm
+RUN npm install -g pnpm
+
+# Copy package files
+COPY package.json pnpm-lock.yaml ./
+COPY packages/*/package.json ./packages/*/
+COPY templates/api-server/package.json ./templates/api-server/
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy source and build
+COPY . .
+RUN pnpm build
+
+EXPOSE 4000
+CMD ["pnpm", "start"]
+```
+
+```bash
+# Build image
+docker build -t myapp-api:latest .
+
+# Tag for Scaleway registry
+docker tag myapp-api:latest rg.fr-par.scw.cloud/myapp-registry/myapp-api:latest
+
+# Push to registry
+docker push rg.fr-par.scw.cloud/myapp-registry/myapp-api:latest
+```
+
+#### 3. Deploy with Docker
+
+**Option A: Single Container**
+```bash
+# Create instance
+scw instance server create \
+  name=myapp-server \
+  type=DEV1-S \
+  image=ubuntu-jammy \
+  volume=50GB \
+  ip=new
+
+# Install Docker
+ssh root@instance-ip "curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh"
+
+# Deploy container
+ssh root@instance-ip "docker run -d -p 4000:4000 --name myapp rg.fr-par.scw.cloud/myapp-registry/myapp-api:latest"
+```
+
+**Option B: Docker Compose**
+```yaml
+# docker-compose.yml
+version: '3.8'
+services:
+  myapp:
+    image: rg.fr-par.scw.cloud/myapp-registry/myapp-api:latest
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://user:pass@host:5432/db
+      - JWT_SECRET=your-secret-key
+    restart: unless-stopped
+    
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/ssl/certs
+    depends_on:
+      - myapp
+    restart: unless-stopped
+```
+
+### Kubernetes Deployment
+
+#### 1. Create K8s Cluster
+```bash
+# Create Kubernetes cluster
+scw k8s cluster create \
+  name=myapp-cluster \
+  version=1.28.1 \
+  pool name=default-pool \
+  node type=DEV1-M \
+  node count=3
+
+# Get kubeconfig
+scw k8s kubeconfig get myapp-cluster > kubeconfig.yaml
+export KUBECONFIG=kubeconfig.yaml
+```
+
+#### 2. Deploy Application with Helm
+
+**Create Helm Chart:**
+```bash
+# Install Helm
+curl https://get.helm.sh/helm-v3.13.0-linux-amd64.tar.gz | tar xz
+sudo mv linux-amd64/helm /usr/local/bin/helm
+
+# Create Helm chart
+helm create myapp-chart
+```
+
+**Helm Values:**
+```yaml
+# myapp-chart/values.yaml
+replicaCount: 3
+
+image:
+  repository: rg.fr-par.scw.cloud/myapp-registry/myapp-api
+  tag: "latest"
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 4000
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: api.yourdomain.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: myapp-tls
+      hosts:
+        - api.yourdomain.com
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+
+resources:
+  limits:
+    memory: 512Mi
+    cpu: 500m
+  requests:
+    memory: 256Mi
+    cpu: 250m
+```
+
+**Deploy:**
+```bash
+# Deploy with Helm
+helm upgrade --install myapp ./myapp-chart \
+  --set image.tag=latest \
+  --set ingress.host=api.yourdomain.com \
+  --set database.url=$DATABASE_URL
+
+# Check deployment
+kubectl get pods
+kubectl get ingress
+```
+
+### VPC & Networking
+
+#### 1. Create VPC and Subnet
+```bash
+# Create VPC
+scw vpc private-network create \
+  name=myapp-vpc \
+  region=fr-par
+
+# Create subnet
+scw vpc subnet create \
+  organization=$(scw config get organization-id) \
+  zone=fr-par-1 \
+  vpc-id=$(scw vpc private-network list --name myapp-vpc --format json | jq -r '.[0].id') \
+  cidr=10.0.1.0/24
+```
+
+#### 2. Security Groups
+
+**Create Security Group:**
+```bash
+# Create security group
+scw instance security-group create \
+  name=myapp-sg \
+  description="MyApp security group"
+
+# Add rules
+# HTTP/HTTPS access
+scw instance security-group add-rule myapp-sg \
+  --direction inbound \
+  --protocol tcp \
+  --port 80
+
+scw instance security-group add-rule myapp-sg \
+  --direction inbound \
+  --protocol tcp \
+  --port 443
+
+# SSH access (restricted)
+scw instance security-group add-rule myapp-sg \
+  --direction inbound \
+  --protocol tcp \
+  --port 22 \
+  --ip-range-range=your-ip/32
+
+# Application port
+scw instance security-group add-rule myapp-sg \
+  --direction inbound \
+  --protocol tcp \
+  --port 4000
+
+# Database access (PostgreSQL)
+scw instance security-group add-rule myapp-sg \
+  --direction inbound \
+  --protocol tcp \
+  --port 5432 \
+  --ip-range-range=10.0.1.0/24
+```
+
+#### 3. Load Balancer
+
+**Create Load Balancer:**
+```bash
+# Create load balancer
+scw lb create \
+  name=myapp-lb \
+  region=fr-par \
+  type=LB-S \
+  organization-id=$(scw config get organization-id)
+
+# Add backend
+scw lb backend create \
+  load-balancer-id=$(scw lb list --name myapp-lb --format json | jq -r '.[0].id') \
+  name=myapp-backend \
+  protocol=tcp \
+  port=4000
+
+# Add target (your instance)
+scw lb target create \
+  backend-id=$(scw lb backend list --load-balancer-id $(scw lb list --name myapp-lb --format json | jq -r '.[0].id') --format json | jq -r '.[0].id') \
+  ip-address=your-instance-ip \
+  port=4000 \
+  weight=1
+```
+
+### Database Services (Managed PostgreSQL)
+
+#### 1. Create Database Instance
+```bash
+# Create PostgreSQL instance
+scw db instance create \
+  name=myapp-db \
+  engine=PostgreSQL-14 \
+  node-type=DB-DEV-S \
+  is-ha-cluster=false \
+  organization=$(scw config get organization-id)
+
+# Wait for provisioning (check status)
+scw db instance list
+```
+
+#### 2. Configure Database
+```bash
+# Create database
+scw db database create \
+  instance-id=$(scw db instance list --name myapp-db --format json | jq -r '.[0].id') \
+  name=myapp
+
+# Create user
+scw db user create \
+  instance-id=$(scw db instance list --name myapp-db --format json | jq -r '.[0].id') \
+  name=myapp_user \
+  password=secure_password
+
+# Get connection string
+CONNECTION_STRING=$(scw db instance list --name myapp-db --format json | jq -r '.[0].endpoint | "postgresql://myapp_user:secure_password@\(.host):\(.port)/myapp"')
+echo $CONNECTION_STRING
+```
+
+#### 3. Redis Cache (Optional)
+```bash
+# Create Redis cluster
+scw redis cluster create \
+  name=myapp-redis \
+  node-type=REDIS-DEV-S \
+  organization=$(scw config get organization-id)
+```
+
+### Auto-scaling Configuration
+
+#### Horizontal Pod Autoscaler (HPA):
+```yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: myapp-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: myapp
+  minReplicas: 3
+  maxReplicas: 20
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+```
+
+#### Vertical Pod Autoscaler (VPA):
+```yaml
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: myapp-vpa
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: myapp
+  updatePolicy:
+    updateMode: "Auto"
+```
+
+### Monitoring & Logging
+
+#### 1. Enable Scaleway Observability
+```bash
+# Enable metrics and logs
+scw observability enable \
+  organization=$(scw config get organization-id) \
+  region=fr-par
+```
+
+#### 2. Application Monitoring
+```typescript
+// Add to your API server
+app.get('/health', async (req, res) => {
+  try {
+    // Database health check
+    await db.execute(sql`SELECT 1`);
+    
+    // Memory usage
+    const memoryUsage = process.memoryUsage();
+    
+    res.status(200).json({
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      memory: {
+        used: Math.round(memoryUsage.heapUsed / 1024 / 1024) + 'MB',
+        total: Math.round(memoryUsage.heapTotal / 1024 / 1024) + 'MB',
+      },
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: 'error',
+      error: error.message,
+    });
+  }
+});
+```
+
+**See Also**: [api-server README](./templates/api-server/README.md), [Kubernetes documentation](https://www.scaleway.com/en/docs/containers/kubernetes/)
+
 ## Database Setup
 
 ### PostgreSQL (Production)
@@ -447,6 +1365,46 @@ railway add
 # Add connection string to environment variables
 ```
 
+**Cloudflare D1:**
+```bash
+# Create D1 database
+npx wrangler d1 create myapp-db
+
+# Run migrations
+npx wrangler d1 execute myapp-db --file=./migrations/schema.sql --env=production
+
+# Connection string format:
+DATABASE_URL=postgres://user:password@localhost:5432/database
+# Note: D1 uses SQLite-compatible syntax in most cases
+```
+
+**Infomaniak:**
+```bash
+# Create PostgreSQL database in dashboard
+# Get connection string: postgresql://user:password@host:5432/database
+
+# Add to environment variables
+DATABASE_URL=postgresql://user:password@host:5432/database
+```
+
+**Scaleway:**
+```bash
+# Create PostgreSQL instance
+scw db instance create \
+  name=myapp-db \
+  engine=PostgreSQL-14 \
+  node-type=DB-DEV-S
+
+# Create database and user
+scw db database create \
+  instance-id=$(scw db instance list --name myapp-db --format json | jq -r '.[0].id') \
+  name=myapp
+
+# Get connection string
+CONNECTION_STRING=$(scw db instance list --name myapp-db --format json | jq -r '.[0].endpoint | "postgresql://myapp_user:secure_password@\(.host):\(.port)/myapp"')
+echo $CONNECTION_STRING
+```
+
 **AWS RDS:**
 ```bash
 aws rds create-db-instance \
@@ -457,6 +1415,19 @@ aws rds create-db-instance \
   --master-user-password <password> \
   --allocated-storage 20 \
   --vpc-security-group-ids sg-xxxxx
+```
+
+**DigitalOcean:**
+```bash
+# Create managed PostgreSQL database
+doctl databases create myapp-db \
+  --engine postgres \
+  --version 14 \
+  --size db-s-1vcpu-1gb \
+  --region nyc3
+
+# Get connection string
+doctl databases connection-pool myapp-db --format connection-string
 ```
 
 ### Connection Pooling

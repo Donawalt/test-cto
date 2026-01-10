@@ -112,11 +112,11 @@ START: README.md (deployment section)
        │
        ├─ Pre-deployment checklist
        ├─ Choose platform
-       │  ├─ Vercel/Netlify (frontend)
-       │  ├─ Railway/Render (backend)
-       │  └─ AWS (custom)
+       │  ├─ Frontend: Vercel, Netlify, Cloudflare Pages
+       │  ├─ Backend: Railway, Render, Cloudflare Workers, Infomaniak, Scaleway
+       │  └─ Full-Stack: AWS, DigitalOcean
        │
-       ├─ Database setup
+       ├─ Database setup (PostgreSQL, Cloudflare D1)
        ├─ Environment configuration
        │
        └─ SECURITY.md (deployment security section)
