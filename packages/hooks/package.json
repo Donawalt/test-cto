@@ -8,23 +8,23 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
     },
     "./scroll": {
       "types": "./dist/scroll/index.d.ts",
-      "import": "./dist/scroll/index.js",
-      "require": "./dist/scroll/index.cjs"
+      "import": "./dist/scroll/index.mjs",
+      "require": "./dist/scroll/index.js"
     },
     "./state": {
       "types": "./dist/state/index.d.ts",
-      "import": "./dist/state/index.js",
-      "require": "./dist/state/index.cjs"
+      "import": "./dist/state/index.mjs",
+      "require": "./dist/state/index.js"
     },
     "./dom": {
       "types": "./dist/dom/index.d.ts",
-      "import": "./dist/dom/index.js",
-      "require": "./dist/dom/index.cjs"
+      "import": "./dist/dom/index.mjs",
+      "require": "./dist/dom/index.js"
     }
   },
   "scripts": {

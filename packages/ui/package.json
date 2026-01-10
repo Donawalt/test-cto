@@ -8,28 +8,28 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
     },
     "./button": {
       "types": "./dist/button/index.d.ts",
-      "import": "./dist/button/index.js",
-      "require": "./dist/button/index.cjs"
+      "import": "./dist/button/index.mjs",
+      "require": "./dist/button/index.js"
     },
     "./card": {
       "types": "./dist/card/index.d.ts",
-      "import": "./dist/card/index.js",
-      "require": "./dist/card/index.cjs"
+      "import": "./dist/card/index.mjs",
+      "require": "./dist/card/index.js"
     },
     "./input": {
       "types": "./dist/input/index.d.ts",
-      "import": "./dist/input/index.js",
-      "require": "./dist/input/index.cjs"
+      "import": "./dist/input/index.mjs",
+      "require": "./dist/input/index.js"
     },
     "./layout": {
       "types": "./dist/layout/index.d.ts",
-      "import": "./dist/layout/index.js",
-      "require": "./dist/layout/index.cjs"
+      "import": "./dist/layout/index.mjs",
+      "require": "./dist/layout/index.js"
     }
   },
   "scripts": {
@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.2.48",
+    "@vitejs/plugin-react": "^4.2.1",
     "react": "^18.2.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3",
