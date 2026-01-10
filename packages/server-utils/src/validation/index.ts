@@ -1,30 +1,29 @@
 import { z, ZodSchema } from 'zod';
 import { createValidationError } from '../error';
 
-export function validateRequestBody<T>(
-  schema: ZodSchema<T>,
-  data: unknown
-): T {
+export function validateRequestBody<T>(schema: ZodSchema<T>, data: unknown): T {
   const result = schema.safeParse(data);
-  
+
   if (!result.success) {
-    const errors = result.error.errors.map((err) => ({
+    const errors = result.error.errors.map((err: z.ZodIssue) => ({
       path: err.path.join('.'),
       message: err.message,
     }));
-    
+
     throw createValidationError('Request validation failed', errors);
   }
-  
+
   return result.data;
 }
 
-export function createValidationErrorFromZod(error: z.ZodError): ReturnType<typeof createValidationError> {
-  const errors = error.errors.map((err) => ({
+export function createValidationErrorFromZod(
+  error: z.ZodError
+): ReturnType<typeof createValidationError> {
+  const errors = error.errors.map((err: z.ZodIssue) => ({
     path: err.path.join('.'),
     message: err.message,
   }));
-  
+
   return createValidationError('Validation failed', errors);
 }
 

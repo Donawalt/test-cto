@@ -1,83 +1,83 @@
 #!/usr/bin/env node
 
-import { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs'
-import { resolve, join, dirname } from 'path'
-import { fileURLToPath } from 'url'
-import chokidar from 'chokidar'
-import { schemaBuilder } from './builder'
+import { readdirSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { resolve, join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+import chokidar from 'chokidar';
+import { schemaBuilder } from './builder';
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Command line argument parsing
-const args = process.argv.slice(2)
-const command = args[0]
-const flags = args.slice(1)
+const args = process.argv.slice(2);
+const command = args[0];
+const flags = args.slice(1);
 
 interface CLIOptions {
-  output?: string
-  watch?: boolean
-  name?: string
+  output?: string;
+  watch?: boolean;
+  name?: string;
 }
 
 function parseArgs(): CLIOptions {
-  const options: CLIOptions = {}
-  
+  const options: CLIOptions = {};
+
   for (let i = 0; i < flags.length; i++) {
-    const flag = flags[i]
-    
+    const flag = flags[i];
+
     switch (flag) {
       case '--output':
-        options.output = flags[++i]
-        break
+        options.output = flags[++i];
+        break;
       case '--watch':
-        options.watch = true
-        break
+        options.watch = true;
+        break;
       case '--name':
-        options.name = flags[++i]
-        break
+        options.name = flags[++i];
+        break;
     }
   }
-  
-  return options
+
+  return options;
 }
 
 // Load schemas from directory
 async function loadSchemas(schemasDir: string) {
   if (!existsSync(schemasDir)) {
-    console.log(`📁 Schemas directory not found: ${schemasDir}`)
-    return
+    console.log(`📁 Schemas directory not found: ${schemasDir}`);
+    return;
   }
 
   // Clear existing schemas
-  schemaBuilder.clear()
+  schemaBuilder.clear();
 
-  const files = readdirSync(schemasDir, { withFileTypes: true })
-  
+  const files = readdirSync(schemasDir, { withFileTypes: true });
+
   for (const file of files) {
     if (file.isFile() && file.name.endsWith('.ts') && file.name !== 'index.ts') {
-      const schemaPath = join(schemasDir, file.name)
-      console.log(`📄 Loading schema: ${schemaPath}`)
-      
+      const schemaPath = join(schemasDir, file.name);
+      console.log(`📄 Loading schema: ${schemaPath}`);
+
       try {
         // Dynamic import of schema file
-        const module = await import(`${schemaPath}?t=${Date.now()}`)
-        console.log(`✅ Loaded schema: ${file.name}`)
+        await import(`${schemaPath}?t=${Date.now()}`);
+        console.log(`✅ Loaded schema: ${file.name}`);
       } catch (error) {
-        console.error(`❌ Error loading schema ${file.name}:`, error)
+        console.error(`❌ Error loading schema ${file.name}:`, error);
       }
     }
   }
 
   // Also try to load the index file
-  const indexPath = join(schemasDir, 'index.ts')
+  const indexPath = join(schemasDir, 'index.ts');
   if (existsSync(indexPath)) {
-    console.log(`📄 Loading schema index: ${indexPath}`)
+    console.log(`📄 Loading schema index: ${indexPath}`);
     try {
-      const module = await import(`${indexPath}?t=${Date.now()}`)
-      console.log(`✅ Loaded schema index`)
+      await import(`${indexPath}?t=${Date.now()}`);
+      console.log(`✅ Loaded schema index`);
     } catch (error) {
-      console.error(`❌ Error loading schema index:`, error)
+      console.error(`❌ Error loading schema index:`, error);
     }
   }
 }
@@ -86,169 +86,169 @@ async function loadSchemas(schemasDir: string) {
 function generateOutputs(outputDir: string) {
   // Ensure output directory exists
   if (!existsSync(outputDir)) {
-    mkdirSync(outputDir, { recursive: true })
+    mkdirSync(outputDir, { recursive: true });
   }
 
-  const tables = schemaBuilder.getAllTables()
-  
+  const tables = schemaBuilder.getAllTables();
+
   if (Object.keys(tables).length === 0) {
-    console.log('⚠️ No schemas defined')
-    return
+    console.log('⚠️ No schemas defined');
+    return;
   }
 
-  console.log(`🔨 Generating types for ${Object.keys(tables).length} schema(s)...`)
+  console.log(`🔨 Generating types for ${Object.keys(tables).length} schema(s)...`);
 
   try {
     // Generate TypeScript interfaces
-    const tsOutput = schemaBuilder.generateTypeScript(tables)
-    writeFileSync(join(outputDir, 'types.ts'), tsOutput)
+    const tsOutput = schemaBuilder.generateTypeScript(tables);
+    writeFileSync(join(outputDir, 'types.ts'), tsOutput);
 
     // Generate Zod validators
-    const zodOutput = schemaBuilder.generateZodValidators(tables)
-    writeFileSync(join(outputDir, 'validators.ts'), zodOutput)
+    const zodOutput = schemaBuilder.generateZodValidators(tables);
+    writeFileSync(join(outputDir, 'validators.ts'), zodOutput);
 
     // Generate API endpoints
-    const apiOutput = schemaBuilder.generateAPI(tables)
-    writeFileSync(join(outputDir, 'api.ts'), apiOutput)
+    const apiOutput = schemaBuilder.generateAPI(tables);
+    writeFileSync(join(outputDir, 'api.ts'), apiOutput);
 
     // Generate Drizzle schemas to db package
-    const drizzleOutput = schemaBuilder.generateDrizzleSchemas(tables)
-    const dbGeneratedDir = resolve(__dirname, '../../db/src/generated')
+    const drizzleOutput = schemaBuilder.generateDrizzleSchemas(tables);
+    const dbGeneratedDir = resolve(__dirname, '../../db/src/generated');
     if (!existsSync(dbGeneratedDir)) {
-      mkdirSync(dbGeneratedDir, { recursive: true })
+      mkdirSync(dbGeneratedDir, { recursive: true });
     }
-    writeFileSync(join(dbGeneratedDir, 'drizzle.ts'), drizzleOutput)
+    writeFileSync(join(dbGeneratedDir, 'drizzle.ts'), drizzleOutput);
 
     // Generate mock data
-    const mockOutput = schemaBuilder.generateMockData(tables)
-    writeFileSync(join(outputDir, 'mocks.ts'), mockOutput)
+    const mockOutput = schemaBuilder.generateMockData(tables);
+    writeFileSync(join(outputDir, 'mocks.ts'), mockOutput);
 
-    console.log(`✅ Generated files in: ${outputDir}`)
+    console.log(`✅ Generated files in: ${outputDir}`);
   } catch (error) {
-    console.error('❌ Error generating outputs:', error)
-    throw error
+    console.error('❌ Error generating outputs:', error);
+    throw error;
   }
 }
 
 // Watch mode
 async function startWatch(outputDir: string) {
-  console.log(`👀 Starting watch mode...`)
-  
-  const schemasDir = resolve(__dirname, 'schemas')
-  
+  console.log(`👀 Starting watch mode...`);
+
+  const schemasDir = resolve(__dirname, 'schemas');
+
   if (!existsSync(schemasDir)) {
-    mkdirSync(schemasDir, { recursive: true })
+    mkdirSync(schemasDir, { recursive: true });
   }
-  
+
   const watcher = chokidar.watch(schemasDir, {
     ignored: /^\./,
     persistent: true,
-  })
-  
+  });
+
   watcher.on('change', async (path: string) => {
-    console.log(`📄 Schema changed: ${path}`)
+    console.log(`📄 Schema changed: ${path}`);
     try {
-      await loadSchemas(schemasDir)
-      generateOutputs(outputDir)
-      console.log(`✅ Regenerated types`)
+      await loadSchemas(schemasDir);
+      generateOutputs(outputDir);
+      console.log(`✅ Regenerated types`);
     } catch (error) {
-      console.error(`❌ Error regenerating types:`, error)
+      console.error(`❌ Error regenerating types:`, error);
     }
-  })
+  });
 
   watcher.on('add', async (path: string) => {
-    console.log(`📄 Schema added: ${path}`)
+    console.log(`📄 Schema added: ${path}`);
     try {
-      await loadSchemas(schemasDir)
-      generateOutputs(outputDir)
-      console.log(`✅ Regenerated types`)
+      await loadSchemas(schemasDir);
+      generateOutputs(outputDir);
+      console.log(`✅ Regenerated types`);
     } catch (error) {
-      console.error(`❌ Error regenerating types:`, error)
+      console.error(`❌ Error regenerating types:`, error);
     }
-  })
+  });
 }
 
 // Migration commands
 function createMigration(name: string) {
-  console.log(`🔨 Creating migration: ${name}`)
-  const migrationsDir = resolve(__dirname, '../migrations')
-  
+  console.log(`🔨 Creating migration: ${name}`);
+  const migrationsDir = resolve(__dirname, '../migrations');
+
   if (!existsSync(migrationsDir)) {
-    mkdirSync(migrationsDir, { recursive: true })
+    mkdirSync(migrationsDir, { recursive: true });
   }
-  
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)
-  const filename = `${timestamp}_${name}.sql`
-  const filepath = join(migrationsDir, filename)
-  
+
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+  const filename = `${timestamp}_${name}.sql`;
+  const filepath = join(migrationsDir, filename);
+
   const migrationTemplate = `-- Migration: ${name}
 -- Created: ${new Date().toISOString()}
 
 -- Add your SQL here
 
-`
-  
-  writeFileSync(filepath, migrationTemplate)
-  console.log(`✅ Migration created: ${filepath}`)
+`;
+
+  writeFileSync(filepath, migrationTemplate);
+  console.log(`✅ Migration created: ${filepath}`);
 }
 
 function runMigrations() {
-  console.log(`🚀 Running migrations...`)
-  const migrationsDir = resolve(__dirname, '../migrations')
-  
+  console.log(`🚀 Running migrations...`);
+  const migrationsDir = resolve(__dirname, '../migrations');
+
   if (!existsSync(migrationsDir)) {
-    console.log('📁 No migrations directory found')
-    return
+    console.log('📁 No migrations directory found');
+    return;
   }
-  
+
   const migrations = readdirSync(migrationsDir)
-    .filter(file => file.endsWith('.sql'))
-    .sort()
-  
+    .filter((file) => file.endsWith('.sql'))
+    .sort();
+
   if (migrations.length === 0) {
-    console.log('📭 No migrations to run')
-    return
+    console.log('📭 No migrations to run');
+    return;
   }
-  
-  console.log(`🔄 Found ${migrations.length} migrations to run`)
-  
-  migrations.forEach(migration => {
-    console.log(`▶️ Running migration: ${migration}`)
+
+  console.log(`🔄 Found ${migrations.length} migrations to run`);
+
+  migrations.forEach((migration) => {
+    console.log(`▶️ Running migration: ${migration}`);
     // In a real implementation, you would execute the SQL here
-    console.log(`✅ Migration completed: ${migration}`)
-  })
+    console.log(`✅ Migration completed: ${migration}`);
+  });
 }
 
 // Main CLI handler
 async function main() {
-  const options = parseArgs()
-  
+  const options = parseArgs();
+
   try {
     switch (command) {
       case 'generate':
-        const schemasDir = resolve(__dirname, 'schemas')
-        const outputDir = options.output || resolve(__dirname, '../../../types/src/generated')
-        
-        await loadSchemas(schemasDir)
-        generateOutputs(outputDir)
-        
+        const schemasDir = resolve(__dirname, 'schemas');
+        const outputDir = options.output || resolve(__dirname, '../../../types/src/generated');
+
+        await loadSchemas(schemasDir);
+        generateOutputs(outputDir);
+
         if (options.watch) {
-          await startWatch(outputDir)
+          await startWatch(outputDir);
         }
-        break
-        
+        break;
+
       case 'migrate:create':
         if (!options.name) {
-          console.error('❌ Migration name required')
-          process.exit(1)
+          console.error('❌ Migration name required');
+          process.exit(1);
         }
-        createMigration(options.name)
-        break
-        
+        createMigration(options.name);
+        break;
+
       case 'migrate:run':
-        runMigrations()
-        break
-        
+        runMigrations();
+        break;
+
       default:
         console.log(`
 🔨 MyApp Schema CLI
@@ -270,13 +270,13 @@ Examples:
   schema generate --watch --output ./types
   schema migrate:create --name AddUsers
   schema migrate:run
-        `)
-        break
+        `);
+        break;
     }
   } catch (error) {
-    console.error('❌ Error:', error)
-    process.exit(1)
+    console.error('❌ Error:', error);
+    process.exit(1);
   }
 }
 
-main()
+main();

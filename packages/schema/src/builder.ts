@@ -278,9 +278,7 @@ import { pgTable, ${this.getDrizzleImports(tables)} } from 'drizzle-orm/pg-core'
 `;
 
     Object.values(tables).forEach((table) => {
-      const tableName = this.toPascalCase(table.name) + 'Table';
       const tableVarName = this.toCamelCase(table.name) + 'Table';
-
       output += `export const ${tableVarName} = pgTable('${table.name}', {\n`;
 
       Object.values(table.columns).forEach((column) => {
@@ -335,7 +333,7 @@ function __uuid__(): string {
       output += `  return {\n`;
 
       const columns = Object.values(table.columns);
-      columns.forEach((column, index) => {
+      columns.forEach((column, _index) => {
         const mockValue = this.generateMockValue(column);
         output += `    ${column.name}: ${mockValue}`;
         output += `,`;

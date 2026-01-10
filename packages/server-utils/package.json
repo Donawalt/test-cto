@@ -50,7 +50,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@myapp/types": "workspace:*"
+    "@myapp/types": "workspace:*",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20.11.5",
