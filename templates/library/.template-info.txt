@@ -1,0 +1,28 @@
+library
+================================================================================
+Type:        Library Template
+Framework:   TypeScript + Tsup
+Purpose:     NPM Package / Shared Library
+Setup Time:  ~2 minutes
+
+Features:
+- TypeScript strict mode
+- Tsup for building (ESM + CJS)
+- Automatic type declarations
+- Vitest testing setup
+- ESLint + Prettier
+- NPM publishing ready
+- Dual module format exports
+
+Usage:
+  cp -r templates/library my-lib
+  cd my-lib
+  pnpm install
+  pnpm build
+  pnpm publish
+
+For full documentation, see:
+  - QUICK_START.md
+  - INTEGRATION_CHECKLIST.md
+  - SECURITY.md
+  - templates/library/README.md

@@ -1,0 +1,29 @@
+api-server
+================================================================================
+Type:        Backend Template
+Framework:   Express + Drizzle ORM
+Purpose:     REST API Server
+Setup Time:  ~2 minutes
+
+Features:
+- Express.js backend
+- Drizzle ORM with PostgreSQL
+- Zod input validation
+- JWT authentication
+- Role-based authorization
+- Rate limiting
+- Helmet security headers
+- Docker + docker-compose support
+- Vitest testing
+
+Usage:
+  cp -r templates/api-server my-api
+  cd my-api
+  pnpm install
+  pnpm dev
+
+For full documentation, see:
+  - QUICK_START.md
+  - INTEGRATION_CHECKLIST.md
+  - SECURITY.md
+  - templates/api-server/README.md

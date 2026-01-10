@@ -1,0 +1,36 @@
+sanity-cms
+================================================================================
+Type:        CMS Template
+Framework:   Sanity Studio v3
+Purpose:     Headless Content Management
+Setup Time:  ~5 minutes
+
+Features:
+- Sanity Studio v3 with React
+- Pre-built content schemas (blog, portfolio)
+- Blog: posts, authors, categories
+- Portfolio: projects, skills, achievements
+- Site settings configuration
+- Block content (portable text)
+- Custom desk structure
+- Media library
+- Role-based access control
+
+Usage:
+  cp -r templates/sanity-cms my-studio
+  cd my-studio
+  pnpm install
+  npx sanity init  # Or pnpm dev if already initialized
+
+Prerequisites:
+  - Node.js 18+
+  - Sanity CLI (npm install -g sanity)
+  - Sanity account (free at sanity.io)
+
+For full documentation, see:
+  - QUICK_START.md
+  - SANITY_SETUP.md
+  - INTEGRATION_WITH_TESTCTO.md
+  - INTEGRATION_CHECKLIST.md
+  - SECURITY.md
+  - templates/sanity-cms/README.md

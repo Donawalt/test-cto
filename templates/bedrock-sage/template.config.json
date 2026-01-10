@@ -1,0 +1,42 @@
+{
+  "name": "bedrock-sage",
+  "description": "Full-stack WordPress template with Bedrock (backend) and Sage (frontend), Docker-ready",
+  "type": "fullstack",
+  "framework": "wordpress",
+  "setupTime": "5 minutes",
+  "monorepoReady": true,
+  "standaloneReady": true,
+  "features": [
+    "Bedrock modern WordPress",
+    "Sage theme development",
+    "Composer dependency management",
+    "Environment configuration",
+    "WP-CLI integration",
+    "Docker support",
+    "ACF integration ready",
+    "REST API integration"
+  ],
+  "scripts": {
+    "install": "composer install && npm install",
+    "dev": "npm run watch",
+    "build": "npm run build",
+    "wp:cli": "wp"
+  },
+  "dependencies": {
+    "wordpress": "^6.4.0",
+    "sage-theme": "^10.0.0"
+  },
+  "devDependencies": {
+    "composer": "^2.5.0",
+    "node": "^20.0.0"
+  },
+  "keywords": [
+    "wordpress",
+    "bedrock",
+    "sage",
+    "theme",
+    "fullstack"
+  ],
+  "author": "test-cto",
+  "version": "1.0.0"
+}
