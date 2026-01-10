@@ -9,6 +9,7 @@ export interface ButtonProps {
   fullWidth?: boolean;
   children: React.ReactNode;
   onClick?: () => void;
+  type?: 'button' | 'submit' | 'reset';
 }
 
 export type CardVariant = 'default' | 'bordered' | 'elevated';

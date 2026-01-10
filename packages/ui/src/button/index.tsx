@@ -20,6 +20,7 @@ export function Button({
   disabled = false,
   loading = false,
   fullWidth = false,
+  type = 'button',
   children,
   onClick,
 }: ButtonProps) {
@@ -34,6 +35,7 @@ export function Button({
       `}
       disabled={disabled || loading}
       onClick={onClick}
+      type={type}
     >
       {loading ? 'Loading...' : children}
     </button>

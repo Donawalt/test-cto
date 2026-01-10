@@ -86,14 +86,11 @@ export function createElement<K extends keyof HTMLElementTagNameMap>(
   return element;
 }
 
-export function isVisible(element: Element): boolean {
+export function isVisible(element: HTMLElement): boolean {
   return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
 }
 
-export function scrollToElement(
-  element: Element,
-  options?: ScrollIntoViewOptions
-): void {
+export function scrollToElement(element: Element, options?: ScrollIntoViewOptions): void {
   element.scrollIntoView(options);
 }
 

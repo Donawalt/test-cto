@@ -10,10 +10,12 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
+    "noEmit": true,
     "moduleResolution": "bundler",
     "target": "ES2022",
     "module": "ESNext",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
@@ -23,8 +25,28 @@
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
-      "@myapp/*": ["./packages/*/src"]
+      "@myapp/ui": ["./packages/ui/src"],
+      "@myapp/ui/*": [
+        "./packages/ui/src/*",
+        "./packages/ui/src/*/index.tsx",
+        "./packages/ui/src/*/index.ts"
+      ],
+      "@myapp/hooks": ["./packages/hooks/src"],
+      "@myapp/hooks/*": ["./packages/hooks/src/*"],
+      "@myapp/types": ["./packages/types/src"],
+      "@myapp/types/*": ["./packages/types/src/*"],
+      "@myapp/utils": ["./packages/utils/src"],
+      "@myapp/utils/*": ["./packages/utils/src/*"],
+      "@myapp/lib": ["./packages/lib/src"],
+      "@myapp/lib/*": ["./packages/lib/src/*"],
+      "@myapp/tokens": ["./packages/tokens/src"],
+      "@myapp/tokens/*": ["./packages/tokens/src/*"],
+      "@myapp/db": ["./packages/db/src"],
+      "@myapp/db/*": ["./packages/db/src/*"],
+      "@myapp/server-utils": ["./packages/server-utils/src"],
+      "@myapp/server-utils/*": ["./packages/server-utils/src/*"]
     }
   },
+  "include": ["packages/types/src/global.d.ts", "packages/web/src/env.d.ts", "packages/*/src/**/*"],
   "exclude": ["node_modules", "dist", "build", ".turbo"]
 }
