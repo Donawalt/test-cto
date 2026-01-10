@@ -226,7 +226,7 @@ pnpm dev
 | **[GETTING_STARTED.md](./GETTING_STARTED.md)** | Setup, development workflow | [Installation](./GETTING_STARTED.md#installation) • [Components](./GETTING_STARTED.md#creating-components) • [Database](./GETTING_STARTED.md#defining-database-schemas) • [Testing](./GETTING_STARTED.md#testing) |
 | **[ARCHITECTURE.md](./ARCHITECTURE.md)** | System design, package structure | [Packages](./ARCHITECTURE.md#package-responsibilities) • [Dependencies](./ARCHITECTURE.md#dependency-graph) • [Build Pipeline](./ARCHITECTURE.md#build-pipeline) • [Performance](./ARCHITECTURE.md#performance-considerations) |
 | **[COMMUNICATION.md](./COMMUNICATION.md)** | Type-safe API patterns | [API Contracts](./COMMUNICATION.md#api-contract-structure) • [Client Patterns](./COMMUNICATION.md#client-side-patterns) • [Server Patterns](./COMMUNICATION.md#server-side-patterns) • [Authentication](./COMMUNICATION.md#authentication) |
-| **[DEPLOYMENT.md](./DEPLOYMENT.md)** | Production deployment | [Cloudflare](./DEPLOYMENT.md#cloudflare-deployment) • [Infomaniak](./DEPLOYMENT.md#infomaniak-deployment) • [Scaleway](./DEPLOYMENT.md#scaleway-deployment) • [Multi-Provider Comparison](./DEPLOYMENT.md#multi-provider-comparison) |
+| **[DEPLOYMENT.md](./DEPLOYMENT.md)** | Production deployment | [Cloudflare](./DEPLOYMENT.md#cloudflare-pages) • [Infomaniak](./DEPLOYMENT.md#infomaniak) • [Scaleway](./DEPLOYMENT.md#scaleway) • [Multi-Platform Guide](./DEPLOYMENT.md#platform-specific-guides) |
 | **[SECURITY.md](./SECURITY.md)** | Security best practices | [Philosophy](./SECURITY.md#security-philosophy) • [Authentication](./SECURITY.md#authentication--authorization) • [API Security](./SECURITY.md#api-security) • [GDPR/CCPA](./SECURITY.md#data-protection--privacy-gdprccpa) |
 | **[TRANSPARENCY.md](./TRANSPARENCY.md)** | Transparency & compliance | [Code Transparency](./TRANSPARENCY.md#code-transparency) • [Data Transparency](./TRANSPARENCY.md#data-transparency) • [GDPR Compliance](./TRANSPARENCY.md#compliance) |
 | **[DOCUMENTATION_MAP.md](./DOCUMENTATION_MAP.md)** | Navigate all docs | [Link Graph](./DOCUMENTATION_MAP.md#documentation-link-graph) • [User Journeys](./DOCUMENTATION_MAP.md#user-journey-maps) • [Recommended Reading](./DOCUMENTATION_MAP.md#recommended-reading-order) |
@@ -497,6 +497,28 @@ pnpm schema:generate # Generate from schemas
 - **[ARCHITECTURE.md](./ARCHITECTURE.md)** - System design, package boundaries, and build pipeline
 - **[COMMUNICATION.md](./COMMUNICATION.md)** - Type-safe API patterns and client-server contracts
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Production deployment strategies for all platforms
+
+### Deployment Platforms
+
+Deploy your MyApp application to **9 production-ready platforms**:
+
+#### Frontend Platforms
+- **Vercel**: Zero-config deployment for React apps
+- **Netlify**: Git-based deployment with form handling
+- **Cloudflare Pages**: Global CDN with edge caching
+
+#### Backend Platforms  
+- **Railway**: Simple backend deployment with database
+- **Render**: Full-stack deployment with background workers
+- **Cloudflare Workers**: Edge computing with global distribution
+- **Infomaniak**: Privacy-focused Swiss hosting (GDPR compliant)
+- **Scaleway**: Enterprise-grade with Kubernetes support
+
+#### Full-Stack Platforms
+- **AWS**: Complete infrastructure control
+- **DigitalOcean**: Cost-effective cloud hosting
+
+> **Choose based on**: Template type, privacy requirements, budget, and scale needs
 
 ### Package Documentation
 Learn about each package's functionality:
