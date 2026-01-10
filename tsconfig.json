@@ -11,13 +11,16 @@
     "declarationMap": true,
     "sourceMap": true,
     "moduleResolution": "bundler",
-    "target": "ES2020",
+    "target": "ES2022",
     "module": "ESNext",
-    "lib": ["ES2020"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": true,
+    "allowJs": true,
     "baseUrl": ".",
     "paths": {
       "@myapp/*": ["./packages/*/src"]

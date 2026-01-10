@@ -1,21 +1,18 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import { resolve } from 'path'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
+import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), TanStackRouterVite()],
   resolve: {
     alias: {
       '@myapp/ui': resolve(__dirname, '../ui/src'),
-      '@myapp/ui/button': resolve(__dirname, '../ui/src/button/index.tsx'),
-      '@myapp/ui/card': resolve(__dirname, '../ui/src/card/index.tsx'),
-      '@myapp/ui/input': resolve(__dirname, '../ui/src/input/index.tsx'),
-      '@myapp/ui/layout': resolve(__dirname, '../ui/src/layout/index.tsx'),
-
       '@myapp/hooks': resolve(__dirname, '../hooks/src'),
       '@myapp/types': resolve(__dirname, '../types/src'),
       '@myapp/utils': resolve(__dirname, '../utils/src'),
       '@myapp/lib': resolve(__dirname, '../lib/src'),
+      '@myapp/tokens': resolve(__dirname, '../tokens/src'),
     },
   },
   server: {
@@ -24,9 +21,13 @@ export default defineConfig({
     hmr: {
       overlay: true,
     },
+    watch: {
+      usePolling: false,
+    },
   },
+  clearScreen: false,
   build: {
     outDir: 'dist',
     sourcemap: true,
   },
-})
+});

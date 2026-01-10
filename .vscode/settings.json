@@ -1,0 +1,32 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "tailwindCSS.includeLanguages": {
+    "plaintext": "ts",
+    "typescript": "ts",
+    "typescriptreact": "tsx"
+  },
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*?)[\"'`]"],
+    ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*?)[\"'`]"],
+    ["clsx\\(([^)]*)\\)", "[\"'`]([^\"'`]*?)[\"'`]"],
+    ["(class|className):\\s*\"([^\"]*)\""]
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.workingDirectories": [
+    { "mode": "auto" }
+  ],
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
+}

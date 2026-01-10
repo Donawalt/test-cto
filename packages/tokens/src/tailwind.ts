@@ -1,5 +1,6 @@
 import { colors, spacing, fontSize, fontWeight, borderRadius, shadows, breakpoints } from './index';
 
+/** @type {import('tailwindcss').Config} */
 export const tailwindConfig = {
   theme: {
     extend: {

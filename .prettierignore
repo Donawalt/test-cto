@@ -1,0 +1,11 @@
+node_modules
+dist
+build
+.turbo
+coverage
+*.log
+.env*
+pnpm-lock.yaml
+package-lock.json
+public
+routeTree.gen.ts

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import Lenis from '@studio-freight/lenis';
 import { routeTree } from './routeTree.gen';
-import './styles/index.css';
+import './styles/tailwind.css';
 
 const lenis = new Lenis({
   duration: 1.2,
@@ -12,8 +12,6 @@ const lenis = new Lenis({
   gestureOrientation: 'vertical',
   smoothWheel: true,
   wheelMultiplier: 1,
-  smoothTouch: false,
-  touchMultiplier: 2,
   infinite: false,
 });
 

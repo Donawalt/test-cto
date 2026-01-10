@@ -1,9 +1,9 @@
 import type { CardProps } from '@myapp/types';
 
 const variantClasses = {
-  default: 'bg-white',
-  bordered: 'bg-white border border-secondary-200',
-  elevated: 'bg-white shadow-md',
+  default: 'bg-primary-500',
+  bordered: 'bg-primary-500 border border-secondary-200',
+  elevated: 'bg-primary-500 shadow-md',
 };
 
 const paddingClasses = {
