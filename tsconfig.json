@@ -18,6 +18,7 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "baseUrl": ".",
     "paths": {
       "@myapp/*": ["./packages/*/src"]
     }

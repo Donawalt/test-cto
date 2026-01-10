@@ -71,3 +71,5 @@ export function isEmpty(value: unknown): boolean {
 export function isPromise<T = unknown>(value: unknown): value is Promise<T> {
   return value instanceof Promise || (typeof value === 'object' && value !== null && 'then' in value);
 }
+
+export { randomUUID } from './crypto'

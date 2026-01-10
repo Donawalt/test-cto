@@ -3,7 +3,7 @@
 import { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs'
 import { resolve, join, dirname } from 'path'
 import { fileURLToPath } from 'url'
-import { chokidar } from 'chokidar'
+import chokidar from 'chokidar'
 import { schemaBuilder } from './builder'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -111,9 +111,13 @@ function generateOutputs(outputDir: string) {
     const apiOutput = schemaBuilder.generateAPI(tables)
     writeFileSync(join(outputDir, 'api.ts'), apiOutput)
 
-    // Generate Drizzle schemas
+    // Generate Drizzle schemas to db package
     const drizzleOutput = schemaBuilder.generateDrizzleSchemas(tables)
-    writeFileSync(join(outputDir, 'drizzle.ts'), drizzleOutput)
+    const dbGeneratedDir = resolve(__dirname, '../../db/src/generated')
+    if (!existsSync(dbGeneratedDir)) {
+      mkdirSync(dbGeneratedDir, { recursive: true })
+    }
+    writeFileSync(join(dbGeneratedDir, 'drizzle.ts'), drizzleOutput)
 
     // Generate mock data
     const mockOutput = schemaBuilder.generateMockData(tables)
@@ -141,7 +145,7 @@ async function startWatch(outputDir: string) {
     persistent: true,
   })
   
-  watcher.on('change', async (path) => {
+  watcher.on('change', async (path: string) => {
     console.log(`📄 Schema changed: ${path}`)
     try {
       await loadSchemas(schemasDir)
@@ -152,7 +156,7 @@ async function startWatch(outputDir: string) {
     }
   })
 
-  watcher.on('add', async (path) => {
+  watcher.on('add', async (path: string) => {
     console.log(`📄 Schema added: ${path}`)
     try {
       await loadSchemas(schemasDir)

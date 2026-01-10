@@ -173,13 +173,6 @@ export class SchemaBuilder {
         output += `${comment}\n  ${column.name}${optional}: ${tsType}\n`
       })
       
-      if (table.relationships) {
-        Object.values(table.relationships).forEach(relationship => {
-          const relType = relationship.type === 'hasMany' ? '[]' : ''
-          output += `  /** relationship: ${relationship.type} */\n  ${this.toCamelCase(relationship.target)}${relType}\n`
-        })
-      }
-      
       output += `}\n\n`
     })
 
@@ -215,14 +208,17 @@ import { z } from 'zod'
 
   // Generate API types
   generateAPI(tables: Record<string, TableDefinition>): string {
+    const typeImports = Object.values(tables).map(t => this.toPascalCase(t.name)).join(', ')
     let output = `// AUTO-GENERATED - DO NOT EDIT MANUALLY
 // Run: pnpm types:generate
+
+import type { ${typeImports} } from './types'
 
 `
     
     Object.values(tables).forEach(table => {
       const interfaceName = this.toPascalCase(table.name)
-      const endpoint = `/${table.name}s`
+      const endpoint = `/${table.name}`
       
       output += `export namespace ${interfaceName}API {\n`
       output += `  export const ENDPOINT = '${endpoint}'\n\n`
@@ -237,7 +233,7 @@ import { z } from 'zod'
         createColumns.forEach(column => {
           const tsType = this.mapColumnToTypeScript(column)
           const optional = column.required ? '' : '?'
-          output += `    ${column.name}${optional}?: ${tsType}\n`
+          output += `    ${column.name}${optional}: ${tsType}\n`
         })
         output += `  }\n\n`
       }
@@ -274,7 +270,7 @@ import { pgTable, ${this.getDrizzleImports(tables)} } from 'drizzle-orm/pg-core'
       const tableName = this.toPascalCase(table.name) + 'Table'
       const tableVarName = this.toCamelCase(table.name) + 'Table'
       
-      output += `export const ${tableVarName} = pgTable('${table.name}s', {\n`
+      output += `export const ${tableVarName} = pgTable('${table.name}', {\n`
       
       Object.values(table.columns).forEach(column => {
         const drizzleDef = this.mapColumnToDrizzle(column)
@@ -291,8 +287,31 @@ import { pgTable, ${this.getDrizzleImports(tables)} } from 'drizzle-orm/pg-core'
 
   // Generate mock data
   generateMockData(tables: Record<string, TableDefinition>): string {
+    const typeImports = Object.values(tables).map(t => this.toPascalCase(t.name)).join(', ')
     let output = `// AUTO-GENERATED - DO NOT EDIT MANUALLY
 // Run: pnpm types:generate
+
+import type { ${typeImports} } from './types'
+
+function __uuid__(): string {
+  const g: any = globalThis as any
+  if (g.crypto && typeof g.crypto.randomUUID === 'function') {
+    return g.crypto.randomUUID()
+  }
+  const s: string[] = []
+  const hex = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+  for (let i = 0; i < hex.length; i++) {
+    const c = hex[i]
+    if (c === 'x' || c === 'y') {
+      const r = (Math.random() * 16) | 0
+      const v = c === 'x' ? r : (r & 0x3) | 0x8
+      s.push(v.toString(16))
+    } else {
+      s.push(c)
+    }
+  }
+  return s.join('')
+}
 
 `
     
@@ -306,7 +325,7 @@ import { pgTable, ${this.getDrizzleImports(tables)} } from 'drizzle-orm/pg-core'
       columns.forEach((column, index) => {
         const mockValue = this.generateMockValue(column)
         output += `    ${column.name}: ${mockValue}`
-        if (index < columns.length - 1) output += `,`
+        output += `,`
         output += `\n`
       })
       
@@ -381,65 +400,67 @@ import { pgTable, ${this.getDrizzleImports(tables)} } from 'drizzle-orm/pg-core'
   }
 
   private mapColumnToDrizzle(column: ColumnDefinition): string {
-    let drizzle = ''
-    
+    let base = ''
     switch (column.type) {
       case 'uuid':
-        drizzle = 'uuid'
+        base = `uuid('${column.name}')`
         break
       case 'string':
-        drizzle = `varchar('${column.name}', { length: ${column.length || 255} })`
+        base = `varchar('${column.name}', { length: ${column.length || 255} })`
         break
       case 'text':
-        drizzle = 'text'
+        base = `text('${column.name}')`
         break
       case 'integer':
-        drizzle = 'integer'
+        base = `integer('${column.name}')`
         break
       case 'float':
-        drizzle = 'numeric'
+        base = `numeric('${column.name}')`
         break
       case 'boolean':
-        drizzle = 'boolean'
+        base = `boolean('${column.name}')`
         break
       case 'date':
-        drizzle = 'date'
+        base = `date('${column.name}')`
         break
       case 'timestamp':
-        drizzle = 'timestamp'
+        base = `timestamp('${column.name}')`
         break
       case 'enum':
-        drizzle = `varchar('${column.name}', { length: 50 })`
+        base = `varchar('${column.name}', { length: ${column.length || 50} })`
         break
       case 'json':
-        drizzle = 'jsonb'
+        base = `jsonb('${column.name}')`
         break
       case 'array':
-        drizzle = 'jsonb'
+        base = `jsonb('${column.name}')`
         break
       default:
-        drizzle = 'text'
+        base = `text('${column.name}')`
     }
 
-    const config: string[] = []
-    if (!column.required) config.push('notNull()')
-    if (column.unique) config.push('unique()')
-    if (column.primaryKey) config.push('primaryKey()')
-    if (column.default) {
+    const chains: string[] = []
+    if (column.primaryKey) chains.push('primaryKey()')
+    if (column.required) chains.push('notNull()')
+    if (column.default !== undefined && column.default !== null) {
       if (typeof column.default === 'string' && column.default.includes('uuid()')) {
-        config.push('defaultRandom()')
+        chains.push('defaultRandom()')
       } else if (typeof column.default === 'string' && column.default.includes('now()')) {
-        config.push('defaultNow()')
-      } else {
-        config.push(`default(() => '${column.default}')`)
+        chains.push('defaultNow()')
+      } else if (typeof column.default === 'boolean' && column.type === 'boolean') {
+        chains.push(`default(${column.default})`)
+      } else if (typeof column.default === 'number' && (column.type === 'integer' || column.type === 'float')) {
+        chains.push(`default(${column.default})`)
+      } else if (typeof column.default === 'string') {
+        chains.push(`default('${column.default}')`)
       }
     }
 
-    return config.length > 0 ? `${drizzle}${config.length > 1 ? '' : ''}.${config.join('.')}` : drizzle
+    return chains.length ? `${base}.${chains.join('.')}` : base
   }
 
   private getDrizzleImports(tables: Record<string, TableDefinition>): string {
-    const imports = new Set(['uuid', 'varchar', 'text', 'integer', 'numeric', 'boolean', 'date', 'timestamp', 'jsonb'])
+    const imports = new Set<string>()
     
     Object.values(tables).forEach(table => {
       Object.values(table.columns).forEach(column => {
@@ -461,7 +482,7 @@ import { pgTable, ${this.getDrizzleImports(tables)} } from 'drizzle-orm/pg-core'
   private generateMockValue(column: ColumnDefinition): string {
     switch (column.type) {
       case 'uuid':
-        return 'crypto.randomUUID()'
+        return '__uuid__()'
       case 'string':
         if (column.enumValues) {
           return `'${column.enumValues[0] || 'default'}'`
