@@ -2,6 +2,41 @@
 
 A **complete, production-ready monorepo** with automatic type generation, comprehensive tooling, and 5 ready-to-use templates.
 
+## 📑 Table of Contents
+
+- [Quick Start](#-quick-start)
+- [What's Included](#-whats-included)
+- [Package Architecture](#-package-architecture)
+- [Templates](#-templates)
+- [Documentation Structure](#-documentation-structure)
+- [Key Features](#-key-features)
+- [Technology Stack](#-technology-stack)
+- [Use Cases](#-use-cases)
+- [Why This Template?](#-why-this-template)
+- [Commands Reference](#-commands-reference)
+- [Next Steps](#-next-steps)
+
+## 🔗 Quick Navigation
+
+**Common Tasks:**
+- 🏁 [Get Started](./GETTING_STARTED.md#installation) - Set up your development environment
+- 🎨 [Create Components](./GETTING_STARTED.md#creating-components) - Build UI components
+- 🗄️ [Define Schemas](./GETTING_STARTED.md#defining-database-schemas) - Create database schemas
+- 🔌 [Integrate APIs](./COMMUNICATION.md#client-side-patterns) - Connect client and server
+- 🚀 [Deploy to Production](./DEPLOYMENT.md#pre-deployment-checklist) - Ship your application
+
+**Learn the System:**
+- 📐 [Architecture Overview](./ARCHITECTURE.md#package-responsibilities) - Understand the package structure
+- 🔄 [Communication Patterns](./COMMUNICATION.md#api-contract-structure) - Master type-safe APIs
+- 📦 [Package Documentation](./ARCHITECTURE.md#package-responsibilities) - Deep dive into each package
+
+**Choose a Template:**
+- ⚛️ [React App](./templates/vite-react/README.md) - Modern SPA with Vite
+- 🌟 [Astro Site](./templates/astro/README.md) - Static site generator
+- 🔧 [API Server](./templates/api-server/README.md) - Backend API
+- 🎯 [Full-Stack](./templates/bedrock-sage/README.md) - Complete application
+- 📚 [NPM Library](./templates/library/README.md) - Package template
+
 ## 🚀 Quick Start
 
 ### 1. Clone and Setup
@@ -163,29 +198,47 @@ pnpm dev
 
 ## 📁 Documentation Structure
 
-### Root Level (5 Guides)
-1. **[README.md](./README.md)** - This overview
-2. **[GETTING_STARTED.md](./GETTING_STARTED.md)** - Complete setup guide
-3. **[ARCHITECTURE.md](./ARCHITECTURE.md)** - System design and patterns
-4. **[COMMUNICATION.md](./COMMUNICATION.md)** - API design and contracts
-5. **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Production deployment guide
+### Core Documentation (Quick Links)
 
-### Per Package (8 READMEs)
-- **[@myapp/types](./packages/types/README.md)** - Type system
-- **[@myapp/schema](./packages/schema/README.md)** - Schema builder
-- **[@myapp/db](./packages/db/README.md)** - Database utilities
-- **[@myapp/lib](./packages/lib/README.md)** - Universal utilities
-- **[@myapp/server-utils](./packages/server-utils/README.md)** - Server tools
-- **[@myapp/tokens](./packages/tokens/README.md)** - Design tokens
-- **[@myapp/ui](./packages/ui/README.md)** - UI components
+| Document | What You'll Learn | Quick Links |
+|----------|-------------------|-------------|
+| **[GETTING_STARTED.md](./GETTING_STARTED.md)** | Setup, development workflow | [Installation](./GETTING_STARTED.md#installation) • [Components](./GETTING_STARTED.md#creating-components) • [Database](./GETTING_STARTED.md#defining-database-schemas) • [Testing](./GETTING_STARTED.md#testing) |
+| **[ARCHITECTURE.md](./ARCHITECTURE.md)** | System design, package structure | [Packages](./ARCHITECTURE.md#package-responsibilities) • [Dependencies](./ARCHITECTURE.md#dependency-graph) • [Build Pipeline](./ARCHITECTURE.md#build-pipeline) • [Performance](./ARCHITECTURE.md#performance-considerations) |
+| **[COMMUNICATION.md](./COMMUNICATION.md)** | Type-safe API patterns | [API Contracts](./COMMUNICATION.md#api-contract-structure) • [Client Patterns](./COMMUNICATION.md#client-side-patterns) • [Server Patterns](./COMMUNICATION.md#server-side-patterns) • [Authentication](./COMMUNICATION.md#authentication) |
+| **[DEPLOYMENT.md](./DEPLOYMENT.md)** | Production deployment | [Vercel](./DEPLOYMENT.md#vercel) • [Railway](./DEPLOYMENT.md#railway) • [AWS](./DEPLOYMENT.md#aws) • [Database Setup](./DEPLOYMENT.md#database-setup) • [CI/CD](./DEPLOYMENT.md#cicd-integration) • [Monitoring](./DEPLOYMENT.md#monitoring--logging) |
+
+### Package Documentation
+
+**Shared Packages:**
+- **[@myapp/types](./packages/types/README.md)** - Type definitions and API contracts
+- **[@myapp/tokens](./packages/tokens/README.md)** - Design tokens and Tailwind config
+
+**Client-Side Packages:**
+- **[@myapp/web](./packages/web/README.md)** - Main React application
+- **[@myapp/ui](./packages/ui/README.md)** - UI component library
 - **[@myapp/hooks](./packages/hooks/README.md)** - React hooks
+- **[@myapp/utils](./packages/utils/README.md)** - Client-side utilities
+- **[@myapp/lib](./packages/lib/README.md)** - Universal utilities
 
-### Per Template (5 Guides)
-- **[vite-react](./templates/vite-react/README.md)** - React app template
-- **[astro](./templates/astro/README.md)** - Static site template
-- **[library](./templates/library/README.md)** - NPM package template
-- **[api-server](./templates/api-server/README.md)** - API server template
-- **[bedrock-sage](./templates/bedrock-sage/README.md)** - Full-stack template
+**Server-Side Packages:**
+- **[@myapp/db](./packages/db/README.md)** - Database utilities and ORM
+- **[@myapp/schema](./packages/schema/README.md)** - Schema builder and code generation
+- **[@myapp/server-utils](./packages/server-utils/README.md)** - Server-side utilities
+
+### Template Documentation
+
+**Frontend Templates:**
+- **[vite-react](./templates/vite-react/README.md)** - Modern React app with TanStack Router
+- **[astro](./templates/astro/README.md)** - Static site generator with API integration
+
+**Backend Templates:**
+- **[api-server](./templates/api-server/README.md)** - Backend API server with Express
+
+**Full-Stack Templates:**
+- **[bedrock-sage](./templates/bedrock-sage/README.md)** - Complete full-stack application
+
+**Library Templates:**
+- **[library](./templates/library/README.md)** - NPM package template with full tooling
 
 ## 🎯 Key Features
 
@@ -396,10 +449,39 @@ pnpm schema:generate # Generate from schemas
 ## 🎯 Next Steps
 
 1. **Read [GETTING_STARTED.md](./GETTING_STARTED.md)** for detailed setup
-2. **Choose a [template](#templates)** for your use case
+2. **Choose a [template](#-templates)** for your use case
 3. **Define your schemas** in `packages/schema/src/schemas/`
 4. **Run `pnpm types:generate`** to create your types
 5. **Start building** with full type safety!
+
+## 📚 See Also
+
+### Core Documentation
+- **[GETTING_STARTED.md](./GETTING_STARTED.md)** - Complete setup guide and development workflow
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - System design, package boundaries, and build pipeline
+- **[COMMUNICATION.md](./COMMUNICATION.md)** - Type-safe API patterns and client-server contracts
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Production deployment strategies for all platforms
+
+### Package Documentation
+Learn about each package's functionality:
+- [@myapp/types](./packages/types/README.md) - Type definitions and API contracts
+- [@myapp/schema](./packages/schema/README.md) - Schema builder and code generation
+- [@myapp/db](./packages/db/README.md) - Database utilities and Drizzle ORM
+- [@myapp/lib](./packages/lib/README.md) - Universal utilities
+- [@myapp/server-utils](./packages/server-utils/README.md) - Server-side utilities
+- [@myapp/tokens](./packages/tokens/README.md) - Design tokens and Tailwind config
+- [@myapp/ui](./packages/ui/README.md) - UI component library
+- [@myapp/hooks](./packages/hooks/README.md) - React hooks
+- [@myapp/utils](./packages/utils/README.md) - Client-side utilities
+- [@myapp/web](./packages/web/README.md) - Main React application
+
+### Template Documentation
+Get started with a specific template:
+- [vite-react](./templates/vite-react/README.md) - Modern React app with TanStack Router
+- [astro](./templates/astro/README.md) - Static site generator with API integration
+- [library](./templates/library/README.md) - NPM package template with full tooling
+- [api-server](./templates/api-server/README.md) - Backend API server with Express
+- [bedrock-sage](./templates/bedrock-sage/README.md) - Full-stack application template
 
 ---
 

@@ -2,6 +2,19 @@
 
 This document describes patterns for type-safe communication between client and server in the MyApp monorepo.
 
+> **See Also**: [ARCHITECTURE.md](./ARCHITECTURE.md) for system design, [GETTING_STARTED.md](./GETTING_STARTED.md) for development setup, [@myapp/types README](./packages/types/README.md) for type definitions.
+
+## 📑 Table of Contents
+
+- [Core Principles](#core-principles)
+- [API Contract Structure](#api-contract-structure)
+- [Client-Side Patterns](#client-side-patterns)
+- [Server-Side Patterns](#server-side-patterns)
+- [Error Handling](#error-handling)
+- [Authentication](#authentication)
+- [Best Practices](#best-practices)
+- [Advanced Patterns](#advanced-patterns)
+
 ## Core Principles
 
 1. **Single Source of Truth**: All types, schemas, and endpoints defined in `@myapp/types`
@@ -216,6 +229,8 @@ async function searchUsers(
 ```
 
 ## Server-Side Patterns
+
+> **See Also**: [@myapp/server-utils README](./packages/server-utils/README.md) for validation and error handling utilities.
 
 ### Basic Route Handler
 
@@ -544,3 +559,27 @@ app.get(API.Endpoints.USERS, authMiddleware, handleGetUsers);
      return <div>{/* render users */}</div>;
    }
    ```
+
+## Advanced Patterns
+
+For more advanced patterns including file uploads, WebSockets, GraphQL integration, and real-time communication, see the package-specific documentation.
+
+---
+
+## 📚 Related Documentation
+
+- **[README.md](./README.md)** - Project overview and quick start
+- **[GETTING_STARTED.md](./GETTING_STARTED.md)** - Development setup and API integration examples
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - System design and communication flow
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Production deployment and environment setup
+
+### Package Documentation
+- [@myapp/types](./packages/types/README.md) - Type definitions and API contracts (core to this guide)
+- [@myapp/server-utils](./packages/server-utils/README.md) - Validation, error handling, and authentication utilities
+- [@myapp/db](./packages/db/README.md) - Database queries and ORM usage
+- [@myapp/hooks](./packages/hooks/README.md) - React hooks including useAsync
+
+### Template Documentation
+- [api-server](./templates/api-server/README.md) - Backend API implementation examples
+- [vite-react](./templates/vite-react/README.md) - Client-side API integration
+- [bedrock-sage](./templates/bedrock-sage/README.md) - Full-stack communication patterns
